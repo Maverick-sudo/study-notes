@@ -1,0 +1,17 @@
+
+# macOS
+.DS_Store
+
+# Python virtual environments (local tooling only; never commit)
+.venv/
+venv/
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Editors
+.vscode/
+.idea/
+
+.github/copilot-instructions.md

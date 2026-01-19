@@ -1,98 +1,36 @@
-# Study Notes
+# study-notes
 
-A comprehensive collection of study notes organized by topic and category. All notes have been converted from PDF format to clean Markdown with consistent structure, including summaries and tables of contents.
+Curated study notes across programming, web development, systems, cloud/networking, and security.
 
-## 📚 Table of Contents
+## Notes
 
-### [Web Development](web-development/)
-Frontend and backend web development technologies, frameworks, and best practices.
+### Programming Languages
 
-#### Frontend
-- [HTML Tutorial](web-development/frontend/html/-%20-HyperText%20Markup%20Language%20Tutorial-%20-.md)
-- [Cascading Style Sheets (CSS)](web-development/frontend/css/Cascading%20Style%20Sheet.md)
-- [JavaScript Introduction](web-development/frontend/javascript/JavaScript%20Introduction.md)
-- [React Framework](web-development/frontend/react/React@JS-Framework.md)
-- [jQuery Libraries](web-development/frontend/jquery/jQuery@JS-libraries.md)
+- JavaScript: [programming-languages/Javascript/Javascript_Intro.md](programming-languages/Javascript/Javascript_Intro.md)
+- PHP: [programming-languages/PHP/PHP_Docs.md](programming-languages/PHP/PHP_Docs.md)
+- Python: [programming-languages/python/Python_intro.md](programming-languages/python/Python_intro.md)
 
-#### Backend
-- [PHP Documentation](web-development/backend/php/PHP%20DOCUMENTATION.md)
+### Web Development
 
-### [Programming Languages](programming-languages/)
-Core programming language documentation, syntax, and concepts.
+- CSS: [web-development/frontend/css/Cascading_Style_Sheet.md](web-development/frontend/css/Cascading_Style_Sheet.md)
+- React: [web-development/frontend/react/React_JSFramework.md](web-development/frontend/react/React_JSFramework.md)
+- SQL: [web-development/frontend/SQL/SQL.md](web-development/frontend/SQL/SQL.md)
 
-- [Python](programming-languages/python/PYTHON.md)
+### Systems & Architecture
 
-### [Networking](networking/)
-Network protocols, cloud networking, virtual networking, and system administration.
+- Unix fundamentals: [system-architecture/system-administration/Unix_Fundamentals.md](system-architecture/system-administration/Unix_Fundamentals.md)
+- Azure & AWS cloud networking: [system-architecture/system-administration/Azure_AWS_CloudNetworking.md](system-architecture/system-administration/Azure_AWS_CloudNetworking.md)
+- Reverse engineering & system architecture: [system-architecture/reverse-engineering/Reverse_Engineering&System_Architecture.md](system-architecture/reverse-engineering/Reverse_Engineering&System_Architecture.md)
 
-- [Networking Protocols](networking/protocols/Networking%20Protocols.md)
-- [Azure & AWS Cloud Networking](networking/cloud-networking/AZ-700%20(Azure%20Network%20Engineer%20Associate)%20&&%20AWS%20Certified%20Advanced….md)
-- [Virtual Networking Labs](networking/virtual-networking/From%20Packet%20Tracer%20to%20Multi-Vendor%20Labs:%20Understanding%20Virtual….md)
-- [Unix Fundamentals](networking/system-administration/Unix%20Fundamentals.md)
+### Security
 
-### [Security](security/)
-Cybersecurity, ethical hacking, web application security, and vulnerability assessment.
+- Ethical hacking: [security/ethical-hacking/Cybersecurity_EthicalHacking.md](security/ethical-hacking/Cybersecurity_EthicalHacking.md)
+- OWASP Top 10: [security/web-security/Owasp_Top10.md](security/web-security/Owasp_Top10.md)
 
-- [Cybersecurity & Ethical Hacking](security/ethical-hacking/CyberSecurity%20&Ethical%20Hacking.md)
-- [OWASP Top 10 Vulnerabilities](security/web-security/OWASP%20-%3E%20Open%20Web%20Application%20Security%20Project%20TOP-10%20Vulnerabilities.md)
+### Networking Labs
 
-### [System Architecture](system-architecture/)
-Reverse engineering, system architecture, and low-level programming concepts.
+- Packet Tracer / EVE-NG / GNS3: [PacketTracer_EveNG_GNS3.md](PacketTracer_EveNG_GNS3.md)
 
-- [Reverse Engineering & System Architecture](system-architecture/reverse-engineering/Reverse%20Engineering%20&%20System%20Architecture.md)
+## Contribution
 
----
-
-## 📖 Document Structure
-
-Each markdown file follows a consistent structure:
-
-1. **Title** - Main heading with the document name
-2. **Summary** - Auto-generated overview of the content
-3. **Table of Contents** - Auto-generated navigation based on headings
-4. **Content** - Detailed notes organized by topics
-
-## 🚀 Getting Started
-
-1. Browse the categories above to find notes on specific topics
-2. Each folder contains a README.md with more details about that category
-3. Use the Table of Contents in each document for quick navigation
-
-## 📝 Notes
-
-- All notes were converted from PDF format to clean Markdown
-- Line breaks from PDF formatting have been removed
-- Headings, bullet points, and tables are preserved
-- Structure has been improved for better readability
-- Each document includes auto-generated summaries and TOCs
-
-## 📂 Repository Structure
-
-```
-study-notes/
-├── web-development/
-│   ├── frontend/
-│   │   ├── html/
-│   │   ├── css/
-│   │   ├── javascript/
-│   │   ├── react/
-│   │   └── jquery/
-│   └── backend/
-│       └── php/
-├── programming-languages/
-│   └── python/
-├── networking/
-│   ├── protocols/
-│   ├── cloud-networking/
-│   ├── virtual-networking/
-│   └── system-administration/
-├── security/
-│   ├── ethical-hacking/
-│   └── web-security/
-└── system-architecture/
-    └── reverse-engineering/
-```
-
----
-
-*Last updated: Auto-generated*
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow.
