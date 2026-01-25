@@ -852,6 +852,47 @@ In protocols like TLS, requirements for authentication and encryption are fulfil
 2. **Key Exchange/Agreement Algorithm:** Used to derive the symmetric key.
 3. **Bulk Data Encryption Cipher:** Usually AES, used in a specific mode of operation.
 
+### TLS/SSL Handshake Diagram
+
+```mermaid
+sequenceDiagram
+    participant C as 🖥️ Client
+    participant S as 🔒 Server
+    
+    Note over C,S: Phase 1: Hello & Cipher Suite Negotiation
+    C->>S: ClientHello<br/>(TLS version, cipher suites, random nonce)
+    S->>C: ServerHello<br/>(Selected cipher suite, random nonce)
+    
+    Note over C,S: Phase 2: Certificate Exchange & Authentication
+    S->>C: Certificate<br/>(Server's digital certificate + public key)
+    S->>C: ServerHelloDone
+    
+    Note over C,S: Phase 3: Key Exchange
+    C->>C: Verify certificate validity<br/>(Check CA signature, expiration, domain)
+    C->>S: ClientKeyExchange<br/>(Pre-master secret encrypted with server's public key)
+    
+    Note over C,S: Phase 4: Session Key Derivation
+    C->>C: Generate session keys<br/>(Master secret from pre-master + nonces)
+    S->>S: Decrypt pre-master secret<br/>Generate session keys
+    
+    Note over C,S: Phase 5: Handshake Completion
+    C->>S: ChangeCipherSpec<br/>(Switch to encrypted communication)
+    C->>S: Finished<br/>(Encrypted handshake hash)
+    S->>C: ChangeCipherSpec
+    S->>C: Finished<br/>(Encrypted handshake hash)
+    
+    Note over C,S: ✅ Secure Channel Established<br/>All subsequent traffic encrypted with symmetric session keys
+    
+    C->>S: Encrypted Application Data
+    S->>C: Encrypted Application Data
+```
+
+**Key Security Features:**
+- **Perfect Forward Secrecy (PFS)**: Ephemeral Diffie-Hellman keys ensure past sessions remain secure even if private key is compromised
+- **Certificate Validation**: Client verifies server identity through CA-signed certificate
+- **Symmetric Encryption**: Session keys (AES) used for bulk data encryption after handshake
+- **MITM Prevention**: Digital signatures and certificate chains establish trust
+
 ---
 
 ## BLOCK CIPHER MODES
@@ -1873,6 +1914,56 @@ Often implemented using a **RESTful API** (Representational State Transfer).
 * The client ends up with an **Access Token** (e.g., a **JSON Web Token [JWT]**).
 * **JWTs** can be passed as Base64-encoded strings in URLs or HTTP headers and can be digitally signed.
 
+### OAuth 2.0 Authorization Code Flow Diagram
+
+```mermaid
+sequenceDiagram
+    participant U as 👤 User<br/>(Resource Owner)
+    participant C as 📱 Client App<br/>(Third-party App)
+    participant A as 🔐 Authorization Server<br/>(IdP - Google/Azure AD)
+    participant R as 📊 Resource Server<br/>(API/Data Host)
+    
+    Note over U,R: Step 1: User Initiates Login
+    U->>C: Click "Login with Google/Azure"
+    C->>U: Redirect to Authorization Server
+    
+    Note over U,R: Step 2: Authorization Request
+    U->>A: GET /authorize?client_id=xxx&redirect_uri=xxx&scope=read
+    A->>U: Display login page & consent screen<br/>("App X wants to access your profile")
+    
+    Note over U,R: Step 3: User Grants Permission
+    U->>A: Enter credentials & approve consent
+    A->>A: Validate credentials<br/>Generate authorization code
+    A->>C: Redirect with authorization code<br/>(https://app.com/callback?code=AUTH_CODE)
+    
+    Note over U,R: Step 4: Exchange Code for Token
+    C->>A: POST /token<br/>(code + client_id + client_secret)
+    A->>A: Validate code & client credentials
+    A->>C: Return Access Token + Refresh Token<br/>(JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...)
+    
+    Note over U,R: Step 5: Access Protected Resources
+    C->>R: API Request with Access Token<br/>(Authorization: Bearer {access_token})
+    R->>R: Validate token signature<br/>Check expiration & scope
+    R->>C: Return requested data (JSON)
+    C->>U: Display user profile/data
+    
+    Note over U,R: Step 6: Token Refresh (when expired)
+    C->>A: POST /token (refresh_token)
+    A->>C: New Access Token
+```
+
+**OAuth 2.0 Grant Types:**
+- **Authorization Code**: Most secure, used by web/mobile apps (shown above)
+- **Implicit**: For browser-based apps (deprecated due to security risks)
+- **Client Credentials**: Machine-to-machine communication
+- **Resource Owner Password**: Direct credentials (legacy, not recommended)
+
+**Security Considerations:**
+- Use HTTPS for all OAuth flows to prevent token interception
+- Implement PKCE (Proof Key for Code Exchange) for mobile apps
+- Validate redirect URIs to prevent authorization code injection
+- Use short-lived access tokens (15-60 min) with refresh tokens
+
 ### OpenID Connect (OIDC)
 
 An authentication layer implemented on top of **OAuth 2.0**.
@@ -1993,6 +2084,102 @@ A topology is a description of how a computer network is physically or logically
 3. **Internet / Guest**: Zone permitting anonymous/unauthenticated access by untrusted hosts over the internet.
 
 Within segregated zones, put hosts with the same security requirements. **A Choke Point** is a purposefully narrow gateway that facilitates better access control and easier monitoring.
+
+### Network Segmentation & Trust Zones Diagram
+
+```mermaid
+flowchart TB
+    subgraph Internet ["🌐 Internet (Untrusted Zone)"]
+        direction TB
+        Web[External Users<br/>Attackers/Public]:::untrusted
+    end
+    
+    subgraph EdgeSecurity ["🔥 Edge Security Layer"]
+        direction LR
+        FW1[External Firewall<br/>Stateful Inspection]:::firewall
+        IPS1[IPS/IDS<br/>Threat Detection]:::security
+        WAF[Web Application<br/>Firewall]:::security
+        FW1 ~~~ IPS1 ~~~ WAF
+    end
+    
+    subgraph DMZ ["⚠️ DMZ - Demilitarized Zone (Low Trust)"]
+        direction TB
+        DMZ1["VLAN 10: Public Web Servers<br/>HTTP/HTTPS - Port 80/443"]:::dmz
+        DMZ2["VLAN 20: Email Servers<br/>SMTP/IMAP - Port 25/993"]:::dmz
+        DMZ3["VLAN 30: DNS Servers<br/>Port 53"]:::dmz
+        DMZ4["VLAN 40: VPN Gateway<br/>IPSec/SSL VPN"]:::dmz
+        DMZ1 ~~~ DMZ2 ~~~ DMZ3 ~~~ DMZ4
+    end
+    
+    subgraph InternalFirewall ["🛡️ Internal Firewall (Choke Point)"]
+        direction LR
+        FW2[Internal Firewall<br/>ACL Policies]:::firewall
+        NAC[Network Access Control<br/>802.1X Authentication]:::security
+        FW2 ~~~ NAC
+    end
+    
+    subgraph InternalZones ["🏢 Internal Network (Trusted Zones)"]
+        direction TB
+        
+        subgraph Corp ["VLAN 100: Corporate LAN (High Trust)"]
+            direction LR
+            C1[Workstations<br/>Employee Devices]:::trusted
+            C2[Printers & Shared<br/>Resources]:::trusted
+            C1 ~~~ C2
+        end
+        
+        subgraph Server ["VLAN 200: Server Segment (Critical)"]
+            direction LR
+            S1[Database Servers<br/>SQL/Oracle]:::critical
+            S2[Application Servers<br/>Internal Apps]:::critical
+            S3[File Servers<br/>NAS/SAN]:::critical
+            S1 ~~~ S2 ~~~ S3
+        end
+        
+        subgraph Mgmt ["VLAN 300: Management Network (Highest Trust)"]
+            direction LR
+            M1[Domain Controllers<br/>AD/LDAP]:::critical
+            M2[SIEM & Monitoring<br/>Splunk/Nagios]:::critical
+            M3[Backup Systems<br/>Veeam/Commvault]:::critical
+            M1 ~~~ M2 ~~~ M3
+        end
+        
+        subgraph Guest ["VLAN 400: Guest Network (No Trust)"]
+            direction LR
+            G1[Guest Wi-Fi<br/>Isolated Subnet]:::guest
+            G2[IoT Devices<br/>Cameras/Sensors]:::guest
+            G1 ~~~ G2
+        end
+    end
+    
+    Internet -->|All Traffic| EdgeSecurity
+    EdgeSecurity -->|Filtered| DMZ
+    DMZ -->|Strict ACLs| InternalFirewall
+    InternalFirewall --> InternalZones
+    
+    Corp -.->|Allow: HTTP/HTTPS<br/>Deny: Direct DB| DMZ
+    Server -.->|Allow: App Traffic<br/>Deny: Internet Direct| DMZ
+    Mgmt -.->|Allow: Monitoring<br/>Deny: User Access| Server
+    Guest -.->|Allow: Internet Only<br/>Deny: Internal Access| Internet
+    
+    TrustLevels["📊 Trust Level Hierarchy<br/>━━━━━━━━━━━━━━━━<br/>🔴 Untrusted: Internet, Guest<br/>🟡 Low Trust: DMZ<br/>🟢 Trusted: Corporate LAN<br/>🔵 Critical: Servers, Management"]:::legend
+    
+    classDef untrusted fill:#e03131,stroke:#c92a2a,stroke-width:3px,color:#fff
+    classDef dmz fill:#ff922b,stroke:#d9480f,stroke-width:3px,color:#fff
+    classDef trusted fill:#51cf66,stroke:#2f9e44,stroke-width:2px,color:#000
+    classDef critical fill:#4dabf7,stroke:#1864ab,stroke-width:3px,color:#fff,font-weight:bold
+    classDef guest fill:#ffd43b,stroke:#f08c00,stroke-width:2px,color:#000
+    classDef firewall fill:#9775fa,stroke:#5f3dc4,stroke-width:3px,color:#fff,font-weight:bold
+    classDef security fill:#ff6b6b,stroke:#c92a2a,stroke-width:2px,color:#fff
+    classDef legend fill:#f1f3f5,stroke:#495057,stroke-width:2px,color:#000,font-size:12px
+```
+
+**Network Segmentation Best Practices:**
+- **Micro-segmentation**: Isolate workloads at granular level (VM/container-level firewalls)
+- **East-West Traffic Control**: Monitor lateral movement between internal segments
+- **Zero Trust Model**: Verify every connection regardless of source zone
+- **VLAN Hopping Prevention**: Disable DTP, use private VLANs, implement 802.1Q trunk security
+- **Choke Points**: Funnel traffic through monitored gateways for visibility
 
 ---
 
@@ -4828,7 +5015,95 @@ In the **Agile Development Model**, development and provisioning tasks are conce
 * **Validation**: A process of determining whether the application is fit for purpose (i.e., design goals meet user requirements).
 * Feedback from **Continuous Delivery** and **Deployment** must be monitored and evaluated to ensure design goals continue to meet user and security requirements and there is no drift from the **Secure Configuration Baseline**.
 
+### CI/CD Pipeline with DevSecOps Diagram
 
+```mermaid
+flowchart LR
+    subgraph DEV ["👨‍💻 Development Phase"]
+        direction TB
+        D1[Developer Commits Code]:::dev
+        D2[Version Control<br/>Git/GitHub]:::dev
+        D3[Pre-commit Hooks<br/>Linting, Secrets Scan]:::security
+        D1 --> D2 --> D3
+    end
+    
+    subgraph CI ["⚙️ Continuous Integration"]
+        direction TB
+        C1[Build Trigger<br/>Automated]:::build
+        C2[Compile & Build<br/>Maven/Gradle/npm]:::build
+        C3[Unit Tests<br/>JUnit/PyTest]:::test
+        C4[SAST - Static Analysis<br/>SonarQube/Checkmarx]:::security
+        C5[Dependency Scan<br/>OWASP Dependency-Check]:::security
+        C6[Secret Detection<br/>GitGuardian/TruffleHog]:::security
+        
+        C1 --> C2 --> C3 --> C4 --> C5 --> C6
+    end
+    
+    subgraph CD_Delivery ["🧪 Continuous Delivery"]
+        direction TB
+        CD1[Deploy to Staging<br/>Environment]:::deploy
+        CD2[Integration Tests<br/>Selenium/Postman]:::test
+        CD3[DAST - Dynamic Analysis<br/>OWASP ZAP/Burp Suite]:::security
+        CD4[Container Scan<br/>Trivy/Clair]:::security
+        CD5[Compliance Check<br/>CIS Benchmarks]:::security
+        CD6[Performance Tests<br/>JMeter/Gatling]:::test
+        
+        CD1 --> CD2 --> CD3 --> CD4 --> CD5 --> CD6
+    end
+    
+    subgraph CD_Deploy ["🚀 Continuous Deployment"]
+        direction TB
+        P1[Manual Approval Gate<br/>Change Advisory Board]:::approval
+        P2[Deploy to Production<br/>Blue/Green or Canary]:::deploy
+        P3[Health Checks<br/>Smoke Tests]:::test
+        P4[Rollback on Failure<br/>Automated]:::deploy
+        
+        P1 --> P2 --> P3
+        P3 -.->|Failure| P4
+    end
+    
+    subgraph MONITOR ["📊 Continuous Monitoring"]
+        direction TB
+        M1[Application Monitoring<br/>New Relic/Datadog]:::monitor
+        M2[Security Monitoring<br/>SIEM - Splunk]:::security
+        M3[Log Aggregation<br/>ELK Stack]:::monitor
+        M4[Incident Response<br/>SOAR Platform]:::security
+        
+        M1 ~~~ M2 ~~~ M3 ~~~ M4
+    end
+    
+    DEV --> CI --> CD_Delivery --> CD_Deploy --> MONITOR
+    MONITOR -.->|Feedback Loop| DEV
+    
+    FailGate1{Security<br/>Gate}:::gate
+    FailGate2{Quality<br/>Gate}:::gate
+    FailGate3{Compliance<br/>Gate}:::gate
+    
+    C6 --> FailGate1
+    CD6 --> FailGate2
+    CD5 --> FailGate3
+    
+    FailGate1 -.->|Fail| Notify1[❌ Block Pipeline<br/>Notify Team]:::fail
+    FailGate2 -.->|Fail| Notify2[❌ Block Pipeline<br/>Notify Team]:::fail
+    FailGate3 -.->|Fail| Notify3[❌ Block Pipeline<br/>Notify Team]:::fail
+    
+    classDef dev fill:#4dabf7,stroke:#1864ab,stroke-width:2px,color:#000
+    classDef build fill:#ffd43b,stroke:#f08c00,stroke-width:2px,color:#000
+    classDef test fill:#51cf66,stroke:#2f9e44,stroke-width:2px,color:#000
+    classDef security fill:#ff6b6b,stroke:#c92a2a,stroke-width:3px,color:#fff,font-weight:bold
+    classDef deploy fill:#9775fa,stroke:#5f3dc4,stroke-width:2px,color:#fff
+    classDef approval fill:#ff922b,stroke:#d9480f,stroke-width:2px,color:#fff
+    classDef monitor fill:#20c997,stroke:#0ca678,stroke-width:2px,color:#000
+    classDef gate fill:#fab005,stroke:#f76707,stroke-width:3px,color:#000,font-weight:bold
+    classDef fail fill:#e03131,stroke:#c92a2a,stroke-width:2px,color:#fff
+```
+
+**DevSecOps Security Integration Points:**
+1. **Shift Left**: Security testing starts in development phase (pre-commit hooks, SAST)
+2. **Automated Security Gates**: Pipeline fails if vulnerabilities exceed threshold
+3. **Infrastructure as Code (IaC) Scanning**: Terraform/CloudFormation security validation
+4. **Container Security**: Image scanning for CVEs before deployment
+5. **Continuous Compliance**: Automated policy validation (PCI-DSS, HIPAA, SOC 2)
 
 ---
 
@@ -4885,52 +5160,60 @@ The key security consideration is the **Shared Responsibility Model**—identify
 ### Cloud Shared Responsibility Model Diagram
 
 ```mermaid
-flowchart TB
-    subgraph IaaS ["IaaS (Infrastructure as a Service)<br/>Example: AWS EC2, Azure VMs"]
+flowchart LR
+    subgraph IaaS ["🏗️ IaaS (Infrastructure as a Service)<br/>Example: AWS EC2, Azure VMs"]
         direction TB
-        I1["👤 Customer Responsible"]:::customer
-        I2[Data & Access Management]:::customer
+        I1["👤 Customer Responsible"]:::custHeader
+        I2[Data & Access]:::customer
         I3[Applications]:::customer
         I4[Runtime & Middleware]:::customer
         I5[Operating System]:::customer
-        I6["🔵 CSP Responsible"]:::csp
+        I6["🔵 CSP Responsible"]:::cspHeader
         I7[Virtualization]:::csp
         I8[Servers & Storage]:::csp
         I9[Networking & Physical]:::csp
+        
+        I1 --> I2 --> I3 --> I4 --> I5 --> I6 --> I7 --> I8 --> I9
     end
     
-    subgraph PaaS ["PaaS (Platform as a Service)<br/>Example: Azure App Service, Heroku"]
+    subgraph PaaS ["⚙️ PaaS (Platform as a Service)<br/>Example: Azure App Service, Heroku"]
         direction TB
-        P1["👤 Customer Responsible"]:::customer
-        P2[Data & Access Management]:::customer
+        P1["👤 Customer Responsible"]:::custHeader
+        P2[Data & Access]:::customer
         P3[Applications]:::customer
-        P4["🟢 Shared Responsibility"]:::shared
+        P4["🟢 Shared Responsibility"]:::sharedHeader
         P5[Runtime & Middleware]:::shared
-        P6["🔵 CSP Responsible"]:::csp
+        P6["🔵 CSP Responsible"]:::cspHeader
         P7[Operating System]:::csp
         P8[Virtualization]:::csp
         P9[Infrastructure]:::csp
+        
+        P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7 --> P8 --> P9
     end
     
-    subgraph SaaS ["SaaS (Software as a Service)<br/>Example: Microsoft 365, Salesforce"]
+    subgraph SaaS ["📱 SaaS (Software as a Service)<br/>Example: Microsoft 365, Salesforce"]
         direction TB
-        S1["👤 Customer Responsible"]:::customer
-        S2[Data & Access Management]:::customer
-        S3["🔵 CSP Responsible"]:::csp
+        S1["👤 Customer Responsible"]:::custHeader
+        S2[Data & Access]:::customer
+        S3["🔵 CSP Responsible"]:::cspHeader
         S4[Applications]:::csp
         S5[Runtime & Middleware]:::csp
         S6[Operating System]:::csp
         S7[Virtualization]:::csp
         S8[Infrastructure]:::csp
+        
+        S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7 --> S8
     end
     
-    Note1["Security OF the Cloud = CSP<br/>Security IN the Cloud = Customer"]:::note
-    
-    classDef customer fill:#fff9c4,stroke:#f57f17,stroke-width:2px
-    classDef csp fill:#bbdefb,stroke:#1565c0,stroke-width:2px
-    classDef shared fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
-    classDef note fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+    classDef customer fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
+    classDef custHeader fill:#fdd835,stroke:#f57f17,stroke-width:3px,color:#000,font-weight:bold
+    classDef csp fill:#bbdefb,stroke:#1565c0,stroke-width:2px,color:#000
+    classDef cspHeader fill:#42a5f5,stroke:#1565c0,stroke-width:3px,color:#fff,font-weight:bold
+    classDef shared fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
+    classDef sharedHeader fill:#66bb6a,stroke:#2e7d32,stroke-width:3px,color:#fff,font-weight:bold
 ```
+
+**Key Insight:** Security **OF** the cloud = CSP manages infrastructure. Security **IN** the cloud = Customer manages data/access.
 
 > **Note:** Specific terms must be set out in a **Contract** or **Service Level Agreement (SLA)**.
 
@@ -7396,6 +7679,98 @@ Crucial that documentation is kept up to date, else future IRP and DRP responses
 **Defense in Depth and Control Diversity** are crucial in designing resilient systems.
 
 **Deception and Disruption Tactics** help to increase the cost of attacks and so deter them.
+
+### Defense in Depth Layers Diagram
+
+```mermaid
+flowchart TB
+    subgraph Layer1 ["🌐 Layer 1: Perimeter Security (External Boundary)"]
+        direction TB
+        P1[Internet Edge Firewall]:::perimeter
+        P2[IDS/IPS]:::perimeter
+        P3[DDoS Protection]:::perimeter
+        P4[Web Application Firewall - WAF]:::perimeter
+        P1 ~~~ P2 ~~~ P3 ~~~ P4
+    end
+    
+    subgraph Layer2 ["🛡️ Layer 2: Network Security (Internal Segmentation)"]
+        direction TB
+        N1[Internal Firewalls]:::network
+        N2[VLANs & Subnets]:::network
+        N3[Network Access Control - NAC]:::network
+        N4[DMZ Isolation]:::network
+        N1 ~~~ N2 ~~~ N3 ~~~ N4
+    end
+    
+    subgraph Layer3 ["💻 Layer 3: Endpoint Security (Host Protection)"]
+        direction TB
+        E1[Antivirus/EDR]:::endpoint
+        E2[Host-based Firewall]:::endpoint
+        E3[Encryption - FDE/BitLocker]:::endpoint
+        E4[Patch Management]:::endpoint
+        E1 ~~~ E2 ~~~ E3 ~~~ E4
+    end
+    
+    subgraph Layer4 ["👤 Layer 4: Application Security (Software Layer)"]
+        direction TB
+        A1[Input Validation]:::application
+        A2[Secure Coding Practices]:::application
+        A3[Code Analysis - SAST/DAST]:::application
+        A4[Application Sandboxing]:::application
+        A1 ~~~ A2 ~~~ A3 ~~~ A4
+    end
+    
+    subgraph Layer5 ["🔐 Layer 5: Data Security (Information Protection)"]
+        direction TB
+        D1[Data Encryption at Rest]:::data
+        D2[Data Loss Prevention - DLP]:::data
+        D3[Database Activity Monitoring]:::data
+        D4[Access Controls - RBAC/ABAC]:::data
+        D1 ~~~ D2 ~~~ D3 ~~~ D4
+    end
+    
+    subgraph Layer6 ["🧑‍💼 Layer 6: Identity & Access (Authentication Layer)"]
+        direction TB
+        I1[Multi-Factor Authentication - MFA]:::identity
+        I2[Single Sign-On - SSO]:::identity
+        I3[Privileged Access Management - PAM]:::identity
+        I4[Zero Trust Architecture]:::identity
+        I1 ~~~ I2 ~~~ I3 ~~~ I4
+    end
+    
+    subgraph Layer7 ["📋 Layer 7: Policies & Awareness (Human Layer)"]
+        direction TB
+        H1[Security Policies & Procedures]:::human
+        H2[Security Awareness Training]:::human
+        H3[Incident Response Plan]:::human
+        H4[Audit & Compliance]:::human
+        H1 ~~~ H2 ~~~ H3 ~~~ H4
+    end
+    
+    Layer1 --> Layer2 --> Layer3 --> Layer4 --> Layer5 --> Layer6 --> Layer7
+    
+    Core[🎯 Protected Assets<br/>Data, Systems, Users]:::core
+    Layer7 --> Core
+    
+    Attack[⚠️ Attack Vector]:::attack
+    Attack -.->|Must breach<br/>ALL layers| Layer1
+    
+    classDef perimeter fill:#ff6b6b,stroke:#c92a2a,stroke-width:3px,color:#fff
+    classDef network fill:#ff922b,stroke:#d9480f,stroke-width:3px,color:#fff
+    classDef endpoint fill:#ffd43b,stroke:#f59f00,stroke-width:3px,color:#000
+    classDef application fill:#51cf66,stroke:#2b8a3e,stroke-width:3px,color:#000
+    classDef data fill:#339af0,stroke:#1864ab,stroke-width:3px,color:#fff
+    classDef identity fill:#9775fa,stroke:#5f3dc4,stroke-width:3px,color:#fff
+    classDef human fill:#cc5de8,stroke:#862e9c,stroke-width:3px,color:#fff
+    classDef core fill:#20c997,stroke:#087f5b,stroke-width:4px,color:#fff,font-weight:bold
+    classDef attack fill:#e03131,stroke:#c92a2a,stroke-width:3px,color:#fff,stroke-dasharray: 5 5
+```
+
+**Defense in Depth Principles:**
+- **Redundancy**: Multiple overlapping controls ensure failure of one layer doesn't compromise security
+- **Diversity**: Different control types (technical, administrative, physical) reduce single points of failure
+- **Layered Controls**: Attackers must breach multiple independent barriers
+- **Compensating Controls**: If primary control fails, secondary controls provide backup protection
 
 ---
 
