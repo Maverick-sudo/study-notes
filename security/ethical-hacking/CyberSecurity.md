@@ -12,11 +12,22 @@
 * **RESPOND:** Identify, analyze, contain, and eradicate threats to systems and data security (Incident Response).
 * **RECOVER:** Implement cybersecurity resilience to restore systems and data if other controls are unable to prevent attacks.
 
----
+### NIST CSF Lifecycle Diagram
 
-## PAYMENT CARD INDUSTRY DATA SECURITY STANDARD (PCI DSS)
-
-The **Payment Card Industry Data Security Standard (PCI DSS)** defines the safe handling and storage of financial information of data subjects.
+```mermaid
+graph LR
+    A[IDENTIFY] --> B[PROTECT]
+    B --> C[DETECT]
+    C --> D[RESPOND]
+    D --> E[RECOVER]
+    E -->|Continuous Improvement| A
+    
+    style A fill:#e1f5ff
+    style B fill:#b3e5fc
+    style C fill:#81d4fa
+    style D fill:#4fc3f7
+    style E fill:#29b6f6
+```
 
 ---
 
@@ -131,6 +142,7 @@ Although a framework gives a high-level view of how to plan IT services, it does
 * **OS / Network Appliance Platform / Vendor-Specific Guides:** Best practice configuration lists the settings and controls that should be applied for a computing platform to work in a defined role (e.g., Client Workstation, Authentication Server, Network Switch, Router, Firewall, Web/Application Server, and so on). Most vendors will provide guidance templates and tools for configuring and validating the deployment of network appliances, OS, web servers, and application/database servers. The security configuration for each of these devices will vary not only by vendor but by device and version as well.
 * **Department of Defense (DoD) Cyber Exchange:** Provides **Security Technical Implementation Guides (STIGs)**, which are hardening guidelines for a variety of software and hardware solutions.
 * **NIST National Checklist Program (NCP):** Provides **"Checklists"** and **"Benchmarks"** for a variety of operating systems and applications.
+* **Payment Card Industry Data Security Standard (PCI DSS)** defines the safe handling and storage of financial information of data subjects.
 
 ---
 
@@ -1048,6 +1060,51 @@ Key Management can be **Centralized**, meaning that an admin or Authority contro
 
 Staff authorized to perform management must be carefully vetted, and due offboarding should be done if employees leave the organization. Another way to use M-of-N is to split a key between several storage devices, such as three USB drives, any two of which could be used to recreate the full key.
 
+### PKI Certificate Lifecycle Diagram
+
+```mermaid
+flowchart TD
+    Start([Subject Needs Certificate]) --> Gen[Key Generation<br/>Create Key Pair]
+    Gen --> CSR[Certificate Signing Request<br/>Submit to CA/RA]
+    CSR --> Verify{Identity<br/>Verification}
+    Verify -->|Failed| Reject[Request Rejected]
+    Verify -->|Passed| Issue[CA Issues Certificate]
+    Issue --> Store[Secure Storage<br/>M-of-N Control for Critical Keys]
+    Store --> Deploy[Certificate Deployment]
+    Deploy --> Valid[Certificate in Use]
+    
+    Valid --> Check{Validation<br/>Check}
+    Check -->|CRL Check| CRL[Check Revocation List]
+    Check -->|OCSP| OCSP[Online Status Check]
+    CRL --> Status{Valid?}
+    OCSP --> Status
+    
+    Status -->|Valid| Continue[Continue Use]
+    Status -->|Revoked/Suspended| Revoke[Certificate Revoked]
+    
+    Continue --> Expire{Approaching<br/>Expiration?}
+    Expire -->|No| Valid
+    Expire -->|Yes| Renew{Renew or<br/>Rekey?}
+    
+    Renew -->|Renew Same Key| Issue
+    Renew -->|Rekey New Key| Gen
+    Renew -->|Don't Renew| Archive{Archive or<br/>Destroy?}
+    
+    Revoke --> Archive
+    Archive -->|Archive| Backup[Secure Backup Storage]
+    Archive -->|Destroy| Destroy[Secure Key Destruction]
+    
+    Backup --> End([End of Lifecycle])
+    Destroy --> End
+    Reject --> End
+    
+    style Gen fill:#e3f2fd
+    style Issue fill:#c5cae9
+    style Store fill:#fff9c4
+    style Revoke fill:#ffcdd2
+    style Archive fill:#f0f4c3
+```
+
 ---
 
 ### Key Recovery & Escrow
@@ -1152,6 +1209,40 @@ Strong authentication is the first line of defense. An **Access Control** system
 4. **ACCOUNTING:** Tracking authorized usage or alerting when unauthorized access is detected.
 
 Servers and protocols implementing these are referred to as **AAA Servers** (Authentication, Authorization, and Accounting).
+
+### IAM Process Flow Diagram
+
+```mermaid
+flowchart TD
+    Start([User Access Request]) --> ID[1. IDENTIFICATION<br/>Present User ID/Account]
+    ID --> Auth[2. AUTHENTICATION<br/>Verify Credentials]
+    Auth --> VerifyFactor{Credentials<br/>Valid?}
+    VerifyFactor -->|Invalid| Fail[Authentication Failed]
+    Fail --> Log1[Log Failed Attempt]
+    Log1 --> Retry{Retry<br/>Allowed?}
+    Retry -->|Yes| Auth
+    Retry -->|No| Block[Account Locked/Blocked]
+    Block --> End([Access Denied])
+    
+    VerifyFactor -->|Valid| Authz[3. AUTHORIZATION<br/>Check Permissions & Policies]
+    Authz --> PermCheck{Has Required<br/>Permissions?}
+    PermCheck -->|No| Deny[Access Denied]
+    Deny --> Log2[Log Authorization Failure]
+    Log2 --> End
+    
+    PermCheck -->|Yes| Grant[Access Granted]
+    Grant --> Acct[4. ACCOUNTING<br/>Log Access & Activities]
+    Acct --> Monitor[Continuous Monitoring]
+    Monitor --> Success([Authorized Session])
+    
+    style ID fill:#e3f2fd
+    style Auth fill:#bbdefb
+    style Authz fill:#90caf9
+    style Acct fill:#64b5f6
+    style Fail fill:#ffcdd2
+    style Deny fill:#ffcdd2
+    style Grant fill:#c8e6c9
+```
 
 ### Authentication Factors
 
@@ -1291,6 +1382,32 @@ Developed as part of **PPP** as a means of authenticating users over a remote li
 3. **Verification**: The server performs its own hash using the password hash stored for the client.
 
 The handshake is repeated and a challenge message is sent periodically during the connection (transparent to the user). This guards against **replay attacks**, in which a previous session could be captured and used to gain access.
+
+### CHAP 3-Way Handshake Diagram
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+    
+    Note over C,S: Phase 1: Challenge
+    S->>C: 1. Challenge Message (Random Nonce)
+    
+    Note over C,S: Phase 2: Response
+    Note over C: Hash = MD5(Nonce + Password)
+    C->>S: 2. Response (Username + Hash)
+    
+    Note over C,S: Phase 3: Verification
+    Note over S: Compute Expected Hash<br/>Compare with Received Hash
+    S->>S: Verify Hash
+    
+    alt Hash Valid
+        S->>C: 3. Success (Connection Established)
+        Note over C,S: Periodic Re-authentication<br/>(Prevents Replay Attacks)
+    else Hash Invalid
+        S->>C: 3. Failure (Connection Rejected)
+    end
+```
 
 ### MS-CHAP v2
 
@@ -2224,6 +2341,42 @@ WiFi Auth comes in 3 types: **Personal (PSK)**, **Enterprise**, and **Open**.
 * WPA3-Personal mitigates against handshake sniffing and offline Dictionary/Brute-force attacks against the passphrase.
 * Mitigates flaw of Downgrade attacks to WPA2-Personal.
 
+### WPA2 vs WPA3 Authentication Diagram
+
+```mermaid
+flowchart TB
+    subgraph WPA2 ["WPA2 4-Way Handshake (Vulnerable to Offline Attacks)"]
+        direction TB
+        W2Start([Client + AP]) --> W2PMK["Derive PMK from<br/>PBKDF2(Passphrase, SSID)"]
+        W2PMK --> W2M1["Message 1: AP → Client<br/>ANonce (AP Random)"]
+        W2M1 --> W2M2["Message 2: Client → AP<br/>SNonce + MIC<br/>(Derive PTK from PMK)"]
+        W2M2 --> W2M3["Message 3: AP → Client<br/>GTK + MIC<br/>(Group Temporal Key)"]
+        W2M3 --> W2M4["Message 4: Client → AP<br/>ACK Confirmation"]
+        W2M4 --> W2Done([Encrypted Communication])
+        
+        Note2["⚠️ Vulnerability: Handshake can be<br/>captured and used for offline<br/>dictionary/brute-force attacks"]:::warning
+        W2M2 -.-> Note2
+    end
+    
+    subgraph WPA3 ["WPA3 SAE (Simultaneous Authentication of Equals)"]
+        direction TB
+        W3Start([Client + AP]) --> W3Commit["Commit Exchange<br/>Dragonfly Handshake<br/>(EC-DH Key Agreement)"]
+        W3Commit --> W3Derive["Derive PMK from:<br/>• Passphrase<br/>• Both MAC Addresses<br/>• Random Values"]
+        W3Derive --> W3Confirm["Confirm Exchange<br/>Mutual Authentication<br/>with Zero-Knowledge Proof"]
+        W3Confirm --> W3PTK["Derive PTK & GTK<br/>Forward Secrecy Enabled"]
+        W3PTK --> W3Done([Encrypted Communication])
+        
+        Note3["✅ Security: Each session uses unique<br/>keys. Offline attacks impossible.<br/>Forward secrecy protects past sessions."]:::secure
+        W3Confirm -.-> Note3
+    end
+    
+    classDef warning fill:#ffcdd2,stroke:#c62828,stroke-width:2px
+    classDef secure fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    
+    style WPA2 fill:#ffebee
+    style WPA3 fill:#e8f5e9
+```
+
 ---
 
 ### Setup and Provisioning
@@ -2784,6 +2937,90 @@ Software designed to assist with managing security data inputs and providing rep
 2. **Sensor**: Collects packet captures and traffic flow from sniffers.
 3. **SIEM Listener / Collector**: Not installed as an agent. Hosts are configured to **push** updates to the SIEM server using a protocol like **Syslog** or **SNMP**.
 * **Syslog**: Allows for centralized collection; an open format and de facto standard for distributed systems.
+
+### SIEM Architecture Diagram
+
+```mermaid
+flowchart TB
+    subgraph Sources ["Log Sources"]
+        FW[Firewalls]
+        IDS[IDS/IPS]
+        Servers[Servers]
+        Endpoints[Endpoints]
+        Apps[Applications]
+        Cloud[Cloud Services]
+        NetDev[Network Devices]
+    end
+    
+    subgraph Collection ["Collection Layer"]
+        Agent1[SIEM Agents<br/>Installed on Hosts]
+        Syslog[Syslog Receivers<br/>Port 514]
+        SNMP[SNMP Traps<br/>Port 162]
+        API[API Connectors<br/>Cloud Integration]
+    end
+    
+    FW -->|Syslog| Syslog
+    IDS -->|Syslog| Syslog
+    Servers -->|Agent| Agent1
+    Endpoints -->|Agent| Agent1
+    Apps -->|Syslog/Agent| Agent1
+    Cloud -->|API| API
+    NetDev -->|SNMP| SNMP
+    
+    subgraph Processing ["SIEM Processing Engine"]
+        direction TB
+        Agg[Log Aggregation<br/>Central Repository]
+        Norm[Normalization<br/>Format Standardization]
+        Parse[Parsing<br/>Field Extraction]
+        Enrich[Enrichment<br/>Add Context]
+    end
+    
+    Agent1 --> Agg
+    Syslog --> Agg
+    SNMP --> Agg
+    API --> Agg
+    
+    Agg --> Norm
+    Norm --> Parse
+    Parse --> Enrich
+    
+    subgraph Analysis ["Analysis & Correlation"]
+        direction TB
+        Rules[Correlation Rules<br/>Pattern Matching]
+        CTI[Threat Intelligence<br/>IoC Matching]
+        UEBA[UEBA<br/>Behavioral Analytics]
+        ML[Machine Learning<br/>Anomaly Detection]
+    end
+    
+    Enrich --> Rules
+    Enrich --> CTI
+    Enrich --> UEBA
+    Enrich --> ML
+    
+    subgraph Output ["Output & Response"]
+        Alerts[Alerts<br/>Security Events]
+        Dashboard[Dashboards<br/>Visualization]
+        Reports[Reports<br/>Compliance]
+        SOAR[SOAR Integration<br/>Automated Response]
+        Archive[Long-term Storage<br/>Retention]
+    end
+    
+    Rules --> Alerts
+    CTI --> Alerts
+    UEBA --> Alerts
+    ML --> Alerts
+    
+    Alerts --> Dashboard
+    Alerts --> SOAR
+    Enrich --> Reports
+    Agg --> Archive
+    
+    style Sources fill:#e3f2fd
+    style Collection fill:#bbdefb
+    style Processing fill:#90caf9
+    style Analysis fill:#ffd54f
+    style Output fill:#81c784
+```
 
 
 
@@ -4645,6 +4882,56 @@ The key security consideration is the **Shared Responsibility Model**—identify
 | Virtualization Layer | CSP | CSP | CSP |
 | Hardware Layer | CSP | CSP | CSP |
 
+### Cloud Shared Responsibility Model Diagram
+
+```mermaid
+flowchart TB
+    subgraph IaaS ["IaaS (Infrastructure as a Service)<br/>Example: AWS EC2, Azure VMs"]
+        direction TB
+        I1["👤 Customer Responsible"]:::customer
+        I2[Data & Access Management]:::customer
+        I3[Applications]:::customer
+        I4[Runtime & Middleware]:::customer
+        I5[Operating System]:::customer
+        I6["🔵 CSP Responsible"]:::csp
+        I7[Virtualization]:::csp
+        I8[Servers & Storage]:::csp
+        I9[Networking & Physical]:::csp
+    end
+    
+    subgraph PaaS ["PaaS (Platform as a Service)<br/>Example: Azure App Service, Heroku"]
+        direction TB
+        P1["👤 Customer Responsible"]:::customer
+        P2[Data & Access Management]:::customer
+        P3[Applications]:::customer
+        P4["🟢 Shared Responsibility"]:::shared
+        P5[Runtime & Middleware]:::shared
+        P6["🔵 CSP Responsible"]:::csp
+        P7[Operating System]:::csp
+        P8[Virtualization]:::csp
+        P9[Infrastructure]:::csp
+    end
+    
+    subgraph SaaS ["SaaS (Software as a Service)<br/>Example: Microsoft 365, Salesforce"]
+        direction TB
+        S1["👤 Customer Responsible"]:::customer
+        S2[Data & Access Management]:::customer
+        S3["🔵 CSP Responsible"]:::csp
+        S4[Applications]:::csp
+        S5[Runtime & Middleware]:::csp
+        S6[Operating System]:::csp
+        S7[Virtualization]:::csp
+        S8[Infrastructure]:::csp
+    end
+    
+    Note1["Security OF the Cloud = CSP<br/>Security IN the Cloud = Customer"]:::note
+    
+    classDef customer fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    classDef csp fill:#bbdefb,stroke:#1565c0,stroke-width:2px
+    classDef shared fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    classDef note fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+```
+
 > **Note:** Specific terms must be set out in a **Contract** or **Service Level Agreement (SLA)**.
 
 ---
@@ -5470,6 +5757,58 @@ PHASES OF INCIDENT RESPONSE LIFECYCLE
    • Imperative to document the incident.
    • Output feeds back into a new preparation cycle.
 
+### Incident Response Lifecycle Diagram
+
+```mermaid
+flowchart TD
+    Start([Security Event Occurs]) --> Prep
+    
+    Prep["1️⃣ PREPARATION<br/>────────────<br/>• Harden Systems<br/>• Create Policies & Procedures<br/>• Establish IR Team<br/>• Deploy Monitoring Tools<br/>• Conduct Training"]
+    
+    Prep --> Identify
+    
+    Identify["2️⃣ IDENTIFICATION<br/>────────────<br/>• Monitor Alerts & Logs<br/>• Detect Anomalies<br/>• Triage Incidents<br/>• Determine Scope<br/>• Notify Stakeholders"]
+    
+    Identify --> IsIncident{Confirmed<br/>Incident?}
+    IsIncident -->|No - False Positive| Document1[Document & Close]
+    IsIncident -->|Yes| Contain
+    
+    Contain["3️⃣ CONTAINMENT<br/>────────────<br/>• Isolate Affected Systems<br/>• Limit Scope & Impact<br/>• Preserve Evidence<br/>• Short-term Containment<br/>• Long-term Containment"]
+    
+    Contain --> Erad
+    
+    Erad["4️⃣ ERADICATION<br/>────────────<br/>• Remove Malware/Threats<br/>• Close Attack Vectors<br/>• Apply Patches<br/>• Strengthen Defenses<br/>• Verify Threat Removal"]
+    
+    Erad --> Recover
+    
+    Recover["5️⃣ RECOVERY<br/>────────────<br/>• Restore Systems<br/>• Validate Operations<br/>• Monitor for Recurrence<br/>• Gradual Return to Production<br/>• Continuous Monitoring"]
+    
+    Recover --> Lessons
+    
+    Lessons["6️⃣ LESSONS LEARNED<br/>────────────<br/>• Post-Incident Review<br/>• Document What Happened<br/>• Identify Improvements<br/>• Update Procedures<br/>• Share Intelligence"]
+    
+    Lessons -->|Continuous Improvement| Prep
+    Document1 --> Prep
+    
+    subgraph Support ["Supporting Activities"]
+        Comm[Communication<br/>Stakeholder Notifications]
+        Legal[Legal/Compliance<br/>Requirements]
+        Forensics[Digital Forensics<br/>Evidence Collection]
+    end
+    
+    Identify -.-> Comm
+    Contain -.-> Forensics
+    Recover -.-> Legal
+    
+    style Prep fill:#e3f2fd
+    style Identify fill:#fff9c4
+    style Contain fill:#ffecb3
+    style Erad fill:#ffe0b2
+    style Recover fill:#c8e6c9
+    style Lessons fill:#b2dfdb
+    style Support fill:#f3e5f5
+```
+
 ---
 
 Incident Response often requires coordinated action and authorization from several departments, adding further levels of complexity.
@@ -5580,6 +5919,51 @@ LOCKHEED MARTIN CYBER KILL CHAIN
 5. Installation – Installing malware or RAT to achieve persistence.
 6. Command and Control (C2) – Establishing outbound channel to adversary-controlled server.
 7. Actions on Objectives – Data exfiltration or other goals.
+
+### Cyber Kill Chain Diagram
+
+```mermaid
+flowchart LR
+    subgraph Attacker ["🎯 Attacker Activities"]
+        R["1. RECONNAISSANCE<br/>────────<br/>• OSINT Gathering<br/>• Network Scanning<br/>• Social Engineering"]
+        W["2. WEAPONIZATION<br/>────────<br/>• Create Exploit<br/>• Couple with Payload<br/>• Prepare Delivery"]
+    end
+    
+    subgraph Target ["🏢 Target Environment"]
+        D["3. DELIVERY<br/>────────<br/>• Phishing Email<br/>• Malicious Link<br/>• USB Drop<br/>• Watering Hole"]
+        E["4. EXPLOITATION<br/>────────<br/>• Execute Code<br/>• Trigger Vulnerability<br/>• Gain Initial Access"]
+        I["5. INSTALLATION<br/>────────<br/>• Install Malware<br/>• Create Backdoor<br/>• Establish Persistence"]
+        C["6. COMMAND & CONTROL<br/>────────<br/>• Beacon to C2 Server<br/>• Remote Access<br/>• Await Instructions"]
+        A["7. ACTIONS ON OBJECTIVES<br/>────────<br/>• Data Exfiltration<br/>• Lateral Movement<br/>• Deploy Ransomware"]
+    end
+    
+    R --> W --> D --> E --> I --> C --> A
+    
+    subgraph Defense ["🛡️ Defensive Controls (Map to Each Stage)"]
+        D1["Threat Intel<br/>Web Filtering"]
+        D2["Email Security<br/>User Training"]
+        D3["Patch Management<br/>EDR/AV"]
+        D4["Application Whitelisting<br/>Least Privilege"]
+        D5["Network Segmentation<br/>Firewall Rules"]
+        D6["DLP<br/>SIEM Alerting"]
+    end
+    
+    D1 -.->|Block| R
+    D2 -.->|Block| D
+    D3 -.->|Prevent| E
+    D4 -.->|Prevent| I
+    D5 -.->|Detect| C
+    D6 -.->|Detect/Prevent| A
+    
+    style R fill:#ffebee
+    style W fill:#ffcdd2
+    style D fill:#ef9a9a
+    style E fill:#e57373
+    style I fill:#ef5350
+    style C fill:#f44336
+    style A fill:#d32f2f
+    style Defense fill:#c8e6c9
+```
 
 MITRE ATT&CK Framework:
 • Database of known TTPs.
@@ -6707,6 +7091,54 @@ The RAID Advisory Board defines RAID levels, numbered from 0-6, representing cor
 
 **PARITY** → Storing additional info to reconstruct data in event of disk failure
 
+### RAID Levels Visual Comparison
+
+```mermaid
+flowchart TB
+    subgraph RAID0 ["RAID 0 - Striping (No Redundancy)"]
+        direction LR
+        R0D1[Disk 1<br/>───<br/>Block A1<br/>Block A3<br/>Block A5]:::disk
+        R0D2[Disk 2<br/>───<br/>Block A2<br/>Block A4<br/>Block A6]:::disk
+        R0Info["⚡ Performance: Excellent<br/>💾 Capacity: 100%<br/>🛡️ Fault Tolerance: NONE<br/>❌ Any disk failure = data loss"]:::info
+    end
+    
+    subgraph RAID1 ["RAID 1 - Mirroring"]
+        direction LR
+        R1D1[Disk 1<br/>───<br/>Block A<br/>Block B<br/>Block C]:::disk
+        R1D2[Disk 2<br/>───<br/>Block A<br/>Block B<br/>Block C]:::disk
+        R1Mirror["🔄 Mirror"]:::mirror
+        R1D1 <--> R1Mirror
+        R1Mirror <--> R1D2
+        R1Info["⚡ Performance: Read Fast<br/>💾 Capacity: 50%<br/>🛡️ Fault Tolerance: 1 disk<br/>✅ Complete data redundancy"]:::info
+    end
+    
+    subgraph RAID5 ["RAID 5 - Striping with Parity"]
+        direction LR
+        R5D1[Disk 1<br/>───<br/>Block A1<br/>Block B2<br/>Parity C]:::disk
+        R5D2[Disk 2<br/>───<br/>Block A2<br/>Parity B<br/>Block C1]:::disk
+        R5D3[Disk 3<br/>───<br/>Parity A<br/>Block B1<br/>Block C2]:::disk
+        R5Info["⚡ Performance: Good<br/>💾 Capacity: (n-1)/n<br/>🛡️ Fault Tolerance: 1 disk<br/>✅ Min 3 disks required"]:::info
+    end
+    
+    subgraph RAID6 ["RAID 6 - Striping with Double Parity"]
+        direction LR
+        R6D1[Disk 1<br/>───<br/>Block A1<br/>Parity BP<br/>Parity CQ]:::disk
+        R6D2[Disk 2<br/>───<br/>Block A2<br/>Block B1<br/>Parity CP]:::disk
+        R6D3[Disk 3<br/>───<br/>Parity AP<br/>Block B2<br/>Block C1]:::disk
+        R6D4[Disk 4<br/>───<br/>Parity AQ<br/>Parity BQ<br/>Block C2]:::disk
+        R6Info["⚡ Performance: Moderate<br/>💾 Capacity: (n-2)/n<br/>🛡️ Fault Tolerance: 2 disks<br/>✅ Min 4 disks required"]:::info
+    end
+    
+    Summary["📊 RAID Selection Guide<br/>────────────────<br/>RAID 0: Maximum performance, no safety<br/>RAID 1: Maximum safety, 50% capacity<br/>RAID 5: Balanced (common for servers)<br/>RAID 6: High safety (critical systems)"]:::summary
+    
+    RAID0 ~~~ RAID1 ~~~ RAID5 ~~~ RAID6 ~~~ Summary
+    
+    classDef disk fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef info fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    classDef mirror fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
+    classDef summary fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px
+```
+
 ---
 
 ## MULTIPATH
@@ -7535,6 +7967,72 @@ This approach seeks out people's opinions of which risk factors are significant.
 - LOW
 - MODERATE
 - HIGH
+
+### Risk Management Process Flow Diagram
+
+```mermaid
+flowchart TD
+    Start([Begin Risk Assessment]) --> Phase1
+    
+    Phase1["📋 PHASE I<br/>Identify Assets & MEFs<br/>────────────<br/>• Mission Essential Functions<br/>• Critical Systems<br/>• Asset Inventory<br/>• Asset Valuation"]
+    
+    Phase1 --> Phase2
+    
+    Phase2["🔍 PHASE II<br/>Identify Vulnerabilities<br/>────────────<br/>• Security Weaknesses<br/>• Configuration Issues<br/>• Unpatched Systems<br/>• Human Factors"]
+    
+    Phase2 --> Phase3
+    
+    Phase3["⚠️ PHASE III<br/>Identify Threats<br/>────────────<br/>• Threat Actors<br/>• Attack Vectors<br/>• Likelihood/Probability<br/>• Threat Intelligence"]
+    
+    Phase3 --> Phase4
+    
+    Phase4["📊 PHASE IV<br/>Analyze Business Impact<br/>────────────<br/>Quantitative or Qualitative"]
+    
+    Phase4 --> Method{Assessment<br/>Method?}
+    
+    Method -->|Quantitative| Quant["Calculate Risk Metrics<br/>────────────<br/>• SLE = Asset Value × EF<br/>• ALE = SLE × ARO<br/>• ROSI = (ALE - ALEm - Cost) / Cost"]
+    
+    Method -->|Qualitative| Qual["Risk Categories<br/>────────────<br/>• Impact: Critical/High/Med/Low<br/>• Likelihood: High/Med/Low<br/>• Heat Map (Red/Yellow/Green)"]
+    
+    Quant --> Risk
+    Qual --> Risk
+    
+    Risk["Calculate Inherent Risk<br/>(Before Mitigation)"]
+    
+    Risk --> Phase5
+    
+    Phase5["🎯 PHASE V<br/>Risk Response Decision"]
+    
+    Phase5 --> Response{Risk<br/>Response<br/>Strategy?}
+    
+    Response -->|Accept| Accept["ACCEPT<br/>────<br/>Risk within appetite<br/>No action needed<br/>Document decision"]
+    
+    Response -->|Mitigate| Mitigate["MITIGATE<br/>────<br/>Implement controls<br/>Reduce likelihood/impact<br/>Calculate Residual Risk"]
+    
+    Response -->|Transfer| Transfer["TRANSFER<br/>────<br/>Insurance<br/>Outsource<br/>Share risk"]
+    
+    Response -->|Avoid| Avoid["AVOID<br/>────<br/>Eliminate activity<br/>Remove asset<br/>Change process"]
+    
+    Accept --> Monitor
+    Mitigate --> Monitor
+    Transfer --> Monitor
+    Avoid --> Monitor
+    
+    Monitor["📈 Continuous Monitoring<br/>────────────<br/>• Track Risk Posture<br/>• Review Controls<br/>• Update Assessments<br/>• Report to Stakeholders"]
+    
+    Monitor -.->|Periodic Review| Phase1
+    
+    style Phase1 fill:#e3f2fd
+    style Phase2 fill:#fff9c4
+    style Phase3 fill:#ffecb3
+    style Phase4 fill:#ffe0b2
+    style Phase5 fill:#c8e6c9
+    style Accept fill:#a5d6a7
+    style Mitigate fill:#81c784
+    style Transfer fill:#66bb6a
+    style Avoid fill:#4caf50
+    style Monitor fill:#b2dfdb
+```
 
 ---
 
