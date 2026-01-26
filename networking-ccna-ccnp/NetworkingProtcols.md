@@ -46,8 +46,6 @@ The OSI Model was developed in the 1970s and 1980s, and it is a conceptual model
 ￼
 The processes of encapsulation and de-encapsulation work in exactly the same way with the TCP/IP model as they do with the OSI model. At each layer of the this models a header is added during Data_encapsulation, and removed during Data_de-encapsulation.
 
-![OSI Model](images/OSI.jpeg)
-
 ### Layer 1: Physical Layer (Cabling involving Data Bits/Streams))
 
 The Physical, and lowest layer of the model, covers how unstructured data, like bits, is transmitted. Over these wires and signals, the raw data bits are received as a stream of 0s and 1s. Fixing errors that occur just at this layer means considering physical damage or interference. Some concrete examples of this are the ways wires are configured, the way signals are transferred over those wires, and the radio frequencies computers use. Technology such as WiFi, Bluetooth, and cable standards such as CAT5 and CAT6 all operate at this layer. This layer also includes the hardware part of modems, adapters, and repeaters.
@@ -228,8 +226,6 @@ This includes the opening and closing of sessions, translating data, and the int
 # CHAPTER 3: INTERNET PROTOCOL ADDRESSING TECHNIQUES 
 
 ### Internet Protocols Packet Structure: IPv4 Header
-
-![IPv4](images/IP-Header-v4.png)
 
 * **Function:** Contains important information for routing and delivering IP packets.
 * **Key Fields:**
@@ -526,8 +522,6 @@ The ICMPv6 protocol must limit the number of error messages sent to the same des
 	•	Security (e.g., AH, ESP)
 	•	Source Routing
 IPv6 routers do not perform IP fragmentation. IPv6 hosts are required to do one of the following: perform Path MTU Discovery, perform end-to-end fragmentation, or send packets no larger than the default maximum transmission unit (MTU), which is 1280 octets.
-
-![Ipv6](images/IP-Header-v6.png)
 
 IPv6 is the most recent version of the Internet Protocol, designed to replace IPv4 due to the exhaustion of IPv4 addresses. It uses 128-bit addresses, providing a significantly larger address space than IPv4's 32-bit addresses. This expansion allows for connecting a vast number of devices to the internet, including the increasing number of Internet of Things (IoT) devices. 
 
@@ -1022,8 +1016,6 @@ TCP is used extensively by many internet applications, including the World Wide 
 	Broadcasts – being connectionless, UDP can broadcast - sent packets can be addressed to be receivable by all devices on the subnet.
 	Multicast – a multicast mode of operation is supported whereby a single datagram packet can be automatically routed without duplication to a group of subscribers.
 
-![TCP](images/TCP-Header.png)
-
 #### TCP Segment Structure and Header Fields
 
 The use of sequencing, acknowledgments, and retransmission means that TCP requires numerous header fields to keep track and maintain state information. A TCP segment encapsulates application layer data.
@@ -1076,8 +1068,6 @@ Unlike TCP, **UDP** is a **Connectionless, Non-Reliable** method of communicatio
 * **Multicast** and **Broadcast** traffic are supported by UDP.
 * It is typically used for applications that transport time-sensitive data but do not require complete reliability (e.g., video or voice streaming). Using smaller packets for transmission means that if a few are lost or arrive out of order, they manifest as minor glitches in playback quality. The reduced overhead means that overall delivery is faster.
 
-![UDP](images/UDP-Header.png)
-
 #### UDP Datagram Structure
 
 A UDP header is only 8 bytes, consisting of:
@@ -1122,8 +1112,6 @@ Attempts have been made to subvert aspects of the communications security that T
 Clients request that a server sets up a TLS connection, achieved either by:
 * Using HTTP port **443** (for encrypted HTTPS traffic).
 * Protocol-specific negotiation (e.g., `STARTTLS` command) to switch a connection from unencrypted (e.g., port 80 for HTTP) to encrypted.
-
-![TLS](images/TLS-handshake-protocol.png)
 
 The TLS Handshake is a complex process but can be summarized:
 
@@ -1175,9 +1163,6 @@ In computer networks, a tunneling protocol is a communication protocol which all
     * **Function:** Encrypts or authenticates the *entire* original IP packet (header + payload). A *new* IP header is then added outside the encrypted original packet.
     * **Use Case:** Most commonly used for network-to-network (e.g., site-to-site VPNs) or host-to-network communication (e.g., remote access VPNs).
     * **Header:** Creates a new outer IP header for routing through the unsecured network, and the original IP packet becomes the payload of the new IP packet.
-
-
-![IPSec](images/IPSec.png)
 
 
 

@@ -115,7 +115,6 @@ JSX Elements are what components are “made of” and are the smallest building
 JSX elements can have attributes, just like HTML elements. A JSX attribute is written using HTML-like syntax: a name, followed by an equals sign, followed by a value wrapped in quotes.
 
 ```jsx
-const panda = <img src='images/panda.svg'  alt='panda' width='500px'  height='500px' />;
 const title = <h1 id='title'>Introduction to React.js: Part I</h1>;
 ```
 
@@ -337,7 +336,6 @@ class ProfilePage extends React.Component {
         <NavBar />
         <h1>All About Me!</h1>
         <p>I like movies and blah blah blah blah blah</p>
-        <img src="https://content.codecademy.com/courses/React/react_photo-monkeyselfie.jpg" />
       </div>
     );
   }
