@@ -1,8 +1,4 @@
-# study-notes
-
-Curated study notes across programming languages, web development, system architecture, networking, and security.
-
-## Notes
+# Notes
 
 ### Programming Languages
 
