@@ -9770,3 +9770,196 @@ A **Hardened PDS** is one where all cable is routed through sealed metal conduit
 Prevents network data cable tap via cable splice. Tamper detection alarm systems can be implemented within the cable conduit.
 
 ---
+
+# ASSET DISPOSAL & EMPLOYEE TRAINING
+
+Physical security controls need to take account of the disposal phase of the system life cycle. Risks of leaking software licenses or configuration info to an attacker can be mitigated by ensuring that the built-in factory reset routine is invoked to wipe any custom configuration or modifications when decommissioning.
+
+**Factory Reset** may leave data remnants.
+
+**Data Remnant Removal** is critical to ensure that no data is recoverable from hard disk drives, flash storage, solid state drives, tape media, CD and DVD ROMs before they are disposed of or put to a different use.
+
+Data remnants can be dealt with either by:
+- **Destroying the media**
+- **Sanitizing** (removing confidential info but leaving the media intact for reuse)
+
+Methods of destroying media include:
+- Incineration
+- Pulverization
+- De-Gaussing (for magnetic drives)
+
+---
+
+## MEDIA SANITIZATION
+
+**Media Sanitizing** refers to erasing data from magnetic drives before disposal or reuse.
+
+**OVERWRITING** is a standard method of sanitizing performed using a drive's firmware tools or a utility format program.
+
+### Overwriting Methods
+
+The basic type of overwriting is called **Zero (0) Filling** (i.e. sets each memory bit to zero).
+
+Regular single-pass zero filling can leave patterns that can be read by specialist tools. A more secure method is to:
+- Overwrite the content with a single pass of all zeros
+- Next a single pass of all 1's
+- Then one or more additional passes in a pseudorandom pattern
+
+---
+
+## SECURE ERASE COMMANDS
+
+The SATA and Serial Attached SCSI specs have included a **Secure Erase** command that can be invoked using a drive firmware utility or the **hdparm** Linux utility.
+
+On **HDDs**, this performs a single-pass zero filling.
+
+For **SSD/hybrid/flash storage** (i.e. USB thumb drives), overwriting is unreliable because the devices use wear-leveling routines to communicate which locations are available for use.
+
+On **SSDs**, the **Secure Erase (SE)** command marks all blocks as empty. The drive firmware's auto garbage collector then performs the actual erase of each block over time. If this process is not completed, there is risk of remnant recovery by specialist tools.
+
+---
+
+## CRYPTOGRAPHIC ERASE / INSTANT SECURE ERASE (ISE)
+
+**HDDs and SSDs** that are **Self-Encrypting Drives (SED)** support another option, invoking the **SANITIZE** command set in the SATA and SAS standards from 2012 to perform a **Crypto Erase**.
+
+Also known as **Instant Secure Erase (ISE)**.
+
+With an SED, all data on the drive is encrypted with a **Media Encryption Key (MEK)**. When the sanitize command is issued, the MEK is erased, rendering the data unrecoverable.
+
+---
+
+## EMPLOYEE TRAINING [PREVENTION-BASED]
+
+
+Untrained users represent a serious vulnerability, because they are susceptible to social engineering and malware attacks. They may be careless when handling sensitive or confidential data or allowing access to secure premises.
+
+Appropriate security awareness training needs to be delivered to employees at all levels. There should be a system for identifying staff performing security-sensitive roles and grading the level of training and education required.
+
+Note that in determining such training programs, focus on **job roles** rather than job titles, as employees may perform different roles and have different security training, education, and awareness needs.
+
+---
+
+## GENERAL TOPICS COVERED DURING SECURITY TRAINING
+
+**Overview** of the organization's security policies and penalties for non-compliance
+
+**Incident Identification and Reporting** procedures
+
+**Site Security** procedures, restrictions and advice, including:
+- Safety drills
+- Escorting guests
+- Use of secure areas
+- Use of personal devices
+
+**Data Handling**, including:
+- Document confidentiality
+- PII
+- Backup
+- Encryption
+
+**Password & Account Management** plus security features of PC and mobile devices
+
+**Secure Use of Software** and appropriate use of Internet access
+
+**Awareness** of social engineering and malware threats:
+- Phishing
+- Website exploits
+- Spam
+- Alerting methods for new threats
+
+---
+
+# FAULT TOLERANCE & AVAILABILITY CONCEPTS
+
+
+**Mission Essential Function (MEF)** - Means an organization must be able to perform the function as close to continually as possible, and MEF is a priority.
+
+---
+
+## FAULT TOLERANCE & REDUNDANCY
+
+
+Each IT asset is susceptible to faults [an event that causes a system or service to become unavailable].
+
+**Key Performance Indicators (KPIs)** can be used to determine the reliability of each asset and assess whether MTD, RTO, RPO can be met.
+
+Some of the main KPIs relating to IT component reliability are as follows:
+
+---
+
+## MEAN TIME BETWEEN FAILURES (MTBF)
+
+**Mean Time Between Failures (MTBF)** - Represents the expected lifetime of a product.
+
+### Calculation for MTBF
+
+The calculation for MTBF is the **total operational time divided by the number of failures**.
+
+**Example**: 10 appliances run for 50 hours, with 2 failures:
+- MTBF = (10 × 50) / 2 = 250 hours
+
+---
+
+## MEAN TIME TO FAILURE (MTTF)
+
+**Mean Time To Failure (MTTF)** - Expresses a similar metric to MTBF for **non-repairable components**.
+
+### Calculation for MTTF
+
+The calculation for MTTF is the **total operational time divided by the number of devices**.
+
+**Example**: 2 hard drives installed in a RAID array, 1 failed after 10 years without replacement, and the second failed after 14 years:
+- MTTF = (10 + 14) / 2 = 12 years
+
+MTTF/MTBF can be used to determine the amount of asset redundancy a system should have. A redundant system can failover to another asset if there is a fault and continue to operate normally.
+
+---
+
+## MEAN TIME TO REPAIR (MTTR)
+
+**Mean Time To Repair (MTTR)** - A measure of the time taken to correct a fault so a failed system is restored to full operation.
+
+### Calculation for MTTR
+
+MTTR is calculated as the **total number of hours of unplanned maintenance divided by the number of failure incidents**.
+
+This average estimates whether **RTO** is achievable.
+
+---
+
+## FAULT TOLERANCE
+
+A system that can experience failures in individual components and sub-systems and continue to provide the same (or nearly the same) level of service is said to be **FAULT TOLERANT**.
+
+This is achieved by provisioning redundancy for critical components to eliminate single points of failure.
+
+---
+
+## REDUNDANT FAILOVER COMPONENT
+
+A **Redundant Failover Component** is one that is not essential to the normal function of a system, but allows the system to recover from the failure of another vital component.
+
+### Such Examples:
+
+**i. Network Links** - Multiple paths between switches and routers provides auto failover for damaged cable/ports
+
+**ii. Uninterruptible Power Supplies (UPS) & Standby Power Supplies** - Provide power protection
+
+**iii. Backup Strategies** - Provide redundant protection of data
+
+**iv. Cluster Services** - A means of ensuring that total failure of a server doesn't disrupt service
+
+**v. Redundant Spares** - A fully redundant server configured with multiple components for each function. A faulty component will then automatically failover to the working spare.
+
+---
+
+# ORGANIZATIONAL UNITS & SECURITY GROUPS (FINAL)
+
+**ORGANIZATIONAL UNITS** are handy for applying policies to users and computers, which include specific configurations that pertain to sets of users depending on their particular role in the organization.
+
+**SECURITY GROUPS** are useful in granting permissions over resources (file objects, folders, hard disks, shared resources).
+
+A single user can only be a member of a single OU at a time, else we risk applying two different policies to a single user. However, a user can be part of multiple security groups, which is needed to grant access to multiple resources.
+
+---
