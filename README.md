@@ -1,6 +1,6 @@
 # study-notes
 
-Curated study notes across programming, web development, systems, cloud/networking, and security.
+Curated study notes across programming languages, web development, system architecture, networking, and security.
 
 ## Notes
 
@@ -18,18 +18,20 @@ Curated study notes across programming, web development, systems, cloud/networki
 
 ### Systems & Architecture
 
-- Unix fundamentals: [system-architecture/system-administration/Unix_Fundamentals.md](system-architecture/system-administration/Unix_Fundamentals.md)
-- Azure & AWS cloud networking: [system-architecture/system-administration/Azure_AWS_CloudNetworking.md](system-architecture/system-administration/Azure_AWS_CloudNetworking.md)
-- Reverse engineering & system architecture: [system-architecture/reverse-engineering/Reverse_Engineering&System_Architecture.md](system-architecture/reverse-engineering/Reverse_Engineering&System_Architecture.md)
+- Azure & AWS: [system-architecture/system-administration/Azure_AWS.md](system-architecture/system-administration/Azure_AWS.md)
+- Reverse engineering & system architecture: [system-architecture/reverse-engineering/Reverse_Engineering_$ystem_Architecture.md](system-architecture/reverse-engineering/Reverse_Engineering_$ystem_Architecture.md)
 
 ### Security
 
-- Ethical hacking: [security/ethical-hacking/Cybersecurity_EthicalHacking.md](security/ethical-hacking/Cybersecurity_EthicalHacking.md)
+- Ethical hacking: [security/ethical-hacking/EthicalHacking.md](security/ethical-hacking/EthicalHacking.md)
+- Active Directory pentest: [security/ethical-hacking/ActiveDirectoryPentest.md](security/ethical-hacking/ActiveDirectoryPentest.md)
+- Cybersecurity: [security/ethical-hacking/CyberSecurity.md](security/ethical-hacking/CyberSecurity.md)
 - OWASP Top 10: [security/web-security/Owasp_Top10.md](security/web-security/Owasp_Top10.md)
 
-### Networking Labs
+### Networking (CCNA/CCNP)
 
-- Packet Tracer / EVE-NG / GNS3: [PacketTracer_EveNG_GNS3.md](PacketTracer_EveNG_GNS3.md)
+- Networking protocols: [networking-ccna-ccnp/NetworkingProtcols.md](networking-ccna-ccnp/NetworkingProtcols.md)
+- Packet Tracer / EVE-NG / GNS3: [networking-ccna-ccnp/PacketTracer_EveNG_GNS3.md](networking-ccna-ccnp/PacketTracer_EveNG_GNS3.md)
 
 ## Contribution
 
