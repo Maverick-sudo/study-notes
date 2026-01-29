@@ -98,7 +98,7 @@ Use Cases: Great for VLAN, STP, OSPF, BGP labs without needing full hardware emu
 
 | Image Name | Category | Notes |
 |---|---|---|
-| c1700–c7200 series | IOS Routers | Legacy ISR platforms |
+| c1700-c7200 series | IOS Routers | Legacy ISR platforms |
 | IOU/i86bi-linux-l3-* | L3 Routers | Virtual routers (OSPF, BGP, EIGRP capable) |
 | IOU/i86bi-linux-l2-* | L2 Switches | Emulated Catalyst-style switches |
 | asav* (e.g. asav981.qcow2, asav991.qcow2) | ASA Firewall | Modern ASAv virtual firewalls |
@@ -116,17 +116,17 @@ Use Cases: Great for VLAN, STP, OSPF, BGP labs without needing full hardware emu
 
 These are router images—physical router platforms that run IOS for routing functionalities:
 
-- c1700‑adventerprisek9‑mz.124‑25d
-- c2600‑adventerprisek9‑mz.124‑15.T14
-- c2691‑adventerprisek9‑mz.124‑15.T14
-- c3620‑a3jk8s‑mz.122‑26c
-- c3640‑a3js‑mz.124‑25d
-- c3660‑a3jk9s‑mz.124‑15.T14
-- c3725‑adventerprisek9‑mz.124‑15.T14
-- c3745‑adventerprisek9‑mz.124‑25d
-- c7200‑adventerprisek9‑mz.153‑3.XB12
-- c7200‑adventerprisek9‑mz.152‑4.S6
-- c7200‑adventerprisek9‑mz.124‑24.T5
+- c1700-adventerprisek9-mz.124-25d
+- c2600-adventerprisek9-mz.124-15.T14
+- c2691-adventerprisek9-mz.124-15.T14
+- c3620-a3jk8s-mz.122-26c
+- c3640-a3js-mz.124-25d
+- c3660-a3jk9s-mz.124-15.T14
+- c3725-adventerprisek9-mz.124-15.T14
+- c3745-adventerprisek9-mz.124-25d
+- c7200-adventerprisek9-mz.153-3.XB12
+- c7200-adventerprisek9-mz.152-4.S6
+- c7200-adventerprisek9-mz.124-24.T5
 
 ### Abbreviations
 
@@ -150,10 +150,10 @@ These are router images—physical router platforms that run IOS for routing fun
 
 | Platform | OS Type | Target Use Case | CLI Style | Resource Usage | Best For |
 |---|---|---|---|---|---|
-| CSR1000v | IOS XE | Cloud/virtual branch routers | Traditional IOS-like | Medium (1–2GB RAM) | Routing, BGP, EIGRP, NAT, VPN |
-| IOS XRv / XRv9000 | IOS XR | Service provider core routers | XR CLI (different flow) | High (2–3GB+) | MPLS, IS-IS, SP Labs |
-| Catalyst 8000v | IOS XE | SD-WAN / advanced enterprise routing | IOS XE | Medium–High | CCNP Enterprise Core, SD-WAN concepts |
-| Catalyst 9000v | IOS XE | Modern campus switches (Access/Core) | IOS XE with DNA/SD-Access | High (2–4GB RAM) | Switching + SD-Access (Advanced Labs) |
+| CSR1000v | IOS XE | Cloud/virtual branch routers | Traditional IOS-like | Medium (1-2GB RAM) | Routing, BGP, EIGRP, NAT, VPN |
+| IOS XRv / XRv9000 | IOS XR | Service provider core routers | XR CLI (different flow) | High (2-3GB+) | MPLS, IS-IS, SP Labs |
+| Catalyst 8000v | IOS XE | SD-WAN / advanced enterprise routing | IOS XE | Medium-High | CCNP Enterprise Core, SD-WAN concepts |
+| Catalyst 9000v | IOS XE | Modern campus switches (Access/Core) | IOS XE with DNA/SD-Access | High (2-4GB RAM) | Switching + SD-Access (Advanced Labs) |
 | ISRv (ISR 1000v) | IOS XE | Software-based ISR router | IOS XE | Medium | HQ/Branch routing, full IOS feature set |
 
 ## Cisco IOU Images for GNS3
@@ -164,15 +164,15 @@ These are IOU (IOS on UNIX) images used in simulation and split into Layer 2 (sw
 | i86bi-linux-l2-adventerprise-15.1b / …-ipbasek9-15.1g | Layer 2 switch |
 | i86bi-linux-l2-upk9-12.2 / …-15.0b | Layer 2 switch |
 | i86bi-linux-l3-jk9s-15.0.1 / …l3-p-15.0a / …l3-p-15.0b | Layer 3 router |
-| i86bi-linux-l3‑tpgen‑adventerprisek9‑12.4 | Layer 3 router |
+| i86bi-linux-l3-tpgen-adventerprisek9-12.4 | Layer 3 router |
 
 ## Cisco ASA Firewall Images for GNS3
 ASA stands for Adaptive Security Appliance — it replaced Cisco PIX in the 2000s and became the standard Cisco firewall platform. These are firewall virtual images (ASAv or classic ASA): 
 
 | ASA Image | Notes |
 |---|---|
-| asa842 | Legacy ASA (8.4.2), limited memory.<br>* asa842‑initrd.gz – classic ASA 8.4.2 |
-| asav981+ | Virtual ASA (ASAv), supports ASDM GUI.<br>asav981.qcow2 – ASAv 9.8.3 (also duplicate listed version 9.8.1)<br>asav991.qcow2 – ASAv 9.9.1<br>asav992‑32.qcow2 – ASAv 9.9.2 |
+| asa842 | Legacy ASA (8.4.2), limited memory.<br>* asa842-initrd.gz - classic ASA 8.4.2 |
+| asav981+ | Virtual ASA (ASAv), supports ASDM GUI.<br>asav981.qcow2 - ASAv 9.8.3 (also duplicate listed version 9.8.1)<br>asav991.qcow2 - ASAv 9.9.1<br>asav992-32.qcow2 - ASAv 9.9.2 |
 | FTD (optional) | Firepower Threat Defense (NGFW) |
 
 Let’s Compare on-premises Cisco ASAv (Adaptive Security Virtual Appliance) with a cloud-based Network Virtual Appliance (NVA) helps clarify how security solutions differ between traditional data centers and modern cloud environments.
@@ -235,7 +235,7 @@ Here's a comparison table between Cisco images (IOS, IOU/IOL, ASA) and equivalen
 
 | Function | Cisco (IOS/IOU/ASA) | Fortinet (FortiGate) | Palo Alto (PA-VM) | MikroTik (RouterOS) | Sophos (XG/UTM) | Juniper (vSRX/vMX) |
 |---|---|---|---|---|---|---|
-| Router | IOS (c1700–c7200) Great for routing protocols (OSPF, BGP, etc.) IOU L3 (i86bi-linux-l3) Lightweight, fast for GNS3/EVE labs. Limited real switching functions. | Routing + UTM | Some static/DHCP + NAT | Full router (BGP, OSPF) | Limited (mainly gateway) | vMX (full routing stack) |
+| Router | IOS (c1700-c7200) Great for routing protocols (OSPF, BGP, etc.) IOU L3 (i86bi-linux-l3) Lightweight, fast for GNS3/EVE labs. Limited real switching functions. | Routing + UTM | Some static/DHCP + NAT | Full router (BGP, OSPF) | Limited (mainly gateway) | vMX (full routing stack) |
 | Switch | - IOU L2 (i86bi-linux-l2)- Limited L2 in vIOS | Not a switch | Not a switch | Router with bridging |  | vQFX (for switching) |
 | Firewall | - ASA 8.x/9.x- ASAv (9.x series)- FTD (optional) Classic firewall, supports NAT, VPN, ACLs. ASAv adds NGFW-like features (with FirePOWER). | FortiGate VM (NGFW, UTM) *support full NGFW functionality. | PA-VM NGFW (AppID, Threats)* Requires more CPU/RAM. | Basic NAT/firewall only | Sophos XG/UTM firewall | vSRX (Juniper NGFW/IPS) |
 | NGFW Features | Partial (with FirePOWER/FTD) | App control, SSL, IPS, AV | App-ID, WildFire, Threat | Basic filtering | AV, IPS, App Ctrl | Unified security + routing |
@@ -328,7 +328,7 @@ Then refresh your EVE-NG web UI and the new image should appear when adding a no
 | Arista | Switch | Layer 2 | vEOS-lab | Used as virtual switch |
 | VyOS | Router/Firewall | Layer 3 | vyos-1.1.7 | Open-source routing and firewall |
 | MikroTik | Router | Layer 3 | chr-6.40.3 | Cloud Hosted Router |
-| F5 | Load Balancer | Layer 4–7 | BIG-IP | Application delivery controller |
+| F5 | Load Balancer | Layer 4-7 | BIG-IP | Application delivery controller |
 | Huawei | Router/Switch | Layer 2/3 | eNSP, AR-series, CE12800 | If supported, rare in repo |
 
 | Device Vendor | Device Type | Folder Name | Path |
@@ -401,7 +401,7 @@ Summary Table
 
 | Item | Applies To | Required? | Purpose |
 |---|---|---|---|
-| Idle-PC Value | c1700–c7200 (Dynamips) | Yes | Prevent 100% CPU usage |
+| Idle-PC Value | c1700-c7200 (Dynamips) | Yes | Prevent 100% CPU usage |
 | Set From GUI | Yes (Right-click) | Yes | EVE-NG finds optimal values |
 | Modern IOSv Images |  | No | Use virtualization, not emu |
 
@@ -424,8 +424,8 @@ chmod 644 /opt/unetlab/addons/iol/iourc
 
 ### Where exactly does the iourc file go?
 Within the iol image directory (/opt/unetlab/addons/iol/), you may see two subdirectories:
-	•	/opt/unetlab/addons/iol/bin/ – holds the actual .bin IOL images.
-	•	/opt/unetlab/addons/iol/lib/ – rarely used unless the image depends on external libraries.
+- /opt/unetlab/addons/iol/bin/ - holds the actual .bin IOL images.
+- /opt/unetlab/addons/iol/lib/ - rarely used unless the image depends on external libraries.
 👉 The **iourc** license file does not go into bin/ or lib/. It should be placed directly in the root of the iol directory:
 
 
@@ -483,7 +483,7 @@ Also apply correct ownership (for EVE-NG compatibility):
 If you're new to EVE-NG and coming from tools like Cisco Packet Tracer, the transition to working with real virtual network appliances can feel overwhelming. One common issue for beginners is incorrect QEMU image folder names or filenames, which prevents appliances from showing up in the EVE-NG web UI.
 In this post, you’ll learn how to correctly organize QEMU images, using reliable references from:
 
-- EVE-NG Documentation – QEMU Image Naming
+- EVE-NG Documentation - QEMU Image Naming
 
 ### Why Image Folder Name Matters
 EVE-NG scans for specific folder names inside the directory:
@@ -709,9 +709,9 @@ Here's a simple, clean step-by-step guide to import a full PNetLab lab into EVE-
 
 #### 1. Get the PNetLab Lab Files
 Make sure you have:
-	•	A .unl topology file (e.g. ccna-lab.unl)
-	•	Optional configs/ folder or .cfg files (node configurations)
-	•	A list of required image names
+- A .unl topology file (e.g. ccna-lab.unl)
+- Optional configs/ folder or .cfg files (node configurations)
+- A list of required image names
 Example PNetLab lab folder:
 
 ```text
@@ -767,10 +767,10 @@ You can either:
 
 ### Optional: Verify Node Configs
 If the lab included saved configs:
-	•	Right-click a node > Start
-	•	Open the console
-	•	Verify the router/switch has config loaded
-	•	If it boots to blank config, the .cfg files may be missing or mismatched
+- Right-click a node > Start
+- Open the console
+- Verify the router/switch has config loaded
+- If it boots to blank config, the .cfg files may be missing or mismatched
 
 
 ### Troubleshooting Tips
@@ -804,9 +804,9 @@ ishare2-cli, is a powerful CLI tool designed specifically for managing EVE-NG im
 
 ### Ideal Use Case for You
 Since you're building labs using .unl files from PNetLab and want full control on a cloud-hosted EVE-NG server, ishare2-cli helps with:
-	•	Instantly downloading the correct image a .unl topology needs (e.g. vios-adventerprisek9-15.9-3)
-	•	Auto-patching EVE-NG image folders with correct naming
-	•	Speeding up the whole import process (no more hunting for compatible .qcow2 files manually)
+- Instantly downloading the correct image a .unl topology needs (e.g. vios-adventerprisek9-15.9-3)
+- Auto-patching EVE-NG image folders with correct naming
+- Speeding up the whole import process (no more hunting for compatible .qcow2 files manually)
 
 
 ### Basic Setup & Usage (Simplified)
@@ -839,16 +839,16 @@ Example to fix permissions (done automatically, but just in case):
 
 
 ### Is it safe to use?
-	•	✅ Open-source, community-maintained
-	•	✅ No login required
-	•	✅ Pulls directly from a hosted repo (like GitHub Releases/CDN)
-	•	✅ Used widely by the EVE-NG & PNetLab community
-	•	🧪 You can inspect the source if concerned about security
+- ✅ Open-source, community-maintained
+- ✅ No login required
+- ✅ Pulls directly from a hosted repo (like GitHub Releases/CDN)
+- ✅ Used widely by the EVE-NG & PNetLab community
+- 🧪 You can inspect the source if concerned about security
 
 
 ### Resources
-	•	GitHub: ishare2-org/ishare2-cli
-	•	List of supported images: ishare2 list or browse iShare2 CDN
+- GitHub: ishare2-org/ishare2-cli
+- List of supported images: ishare2 list or browse iShare2 CDN
 
 Part 1: VPS Providers with Nested Virtualization (KVM Support)
 Here is a table of cloud providers that support KVM with nested virtualization, critical for running EVE-NG and virtual router images:
@@ -874,31 +874,21 @@ Here is a table of cloud providers that support KVM with nested virtualization, 
 | IBM Cloud | KVM, PowerVM (for Power-based VMs) | IBM supports both Intel and Power architectures. |
 | Alibaba Cloud | KVM | Same as GCP. Efficient for Linux-heavy workloads. |
 | DigitalOcean | KVM | Lightweight and developer-friendly cloud. |
-Platform
-Type
-Details
-VMware Fusion
-Type 2
-macOS desktop virtualization.
-VMware Workstation
-Type 2
-Windows/Linux desktop virtualization.
-VirtualBox
-Type 2
-Popular open-source hypervisor.
-KVM/QEMU on Linux
-Type 1
-Linux-native, used for EVE-NG, GNS3, lab setups.
-Proxmox VE
-Type 1
-KVM-based, runs directly on hardware.
-ESXi
-Type 1
+
+| Platform | Type | Details |
+| --- | --- | --- |
+| VMware Fusion | Type 2 | macOS desktop virtualization. |
+| VMware Workstation | Type 2 | Windows/Linux desktop virtualization. |
+| VirtualBox | Type 2 | Popular open-source hypervisor. |
+| KVM/QEMU on Linux | Type 1 | Linux-native, used for EVE-NG, GNS3, lab setups. |
+| Proxmox VE | Type 1 | KVM-based, runs directly on hardware. |
+| ESXi | Type 1 | Direct hardware control, VMware's enterprise hypervisor. |
+
 Direct hardware control, VMware’s enterprise hypervisor.
 	Part 2: Step-by-Step Guide to Deploy EVE-NG on a Cloud VPS
 Requirements:
-	•	A VPS with: 4 vCPU, 8GB+ RAM, 40GB+ SSD, KVM + nested VT
-	•	EVE-NG ISO: Download from eve-ng.net
+- A VPS with: 4 vCPU, 8GB+ RAM, 40GB+ SSD, KVM + nested VT
+- EVE-NG ISO: Download from eve-ng.net
 
 ### Step 1: Deploy Your VPS
 
@@ -962,9 +952,9 @@ python3 ishare.py
 ```
 
 Step 3: Download Images
-	•	Run the tool and follow the terminal UI.
-	•	It fetches router/firewall images (e.g., Cisco vIOS, FortiGate) from their open repository.
-	•	Images are automatically placed in the correct EVE-NG folder.Part 4: Using iShare + EVE-NG Together
+- Run the tool and follow the terminal UI.
+- It fetches router/firewall images (e.g., Cisco vIOS, FortiGate) from their open repository.
+- Images are automatically placed in the correct EVE-NG folder.Part 4: Using iShare + EVE-NG Together
 	0.	Create a lab in EVE-NG Web UI.
 	0.	Use nodes from imported images.
 	0.	Upload .unl lab files (from PNetLab if needed).
@@ -985,14 +975,14 @@ Whether you're migrating from Packet Tracer or scaling up from GNS3, this approa
 - Saves time when working with prebuilt topologies (like .unl files) from PNETLab or the community.
 
 ## Prerequisites
-	•	EVE-NG is already installed (locally via VMware or on a cloud VPS).
-	•	SSH or terminal access to your EVE-NG shell.
-	•	Internet access from within the EVE-NG VM.
+- EVE-NG is already installed (locally via VMware or on a cloud VPS).
+- SSH or terminal access to your EVE-NG shell.
+- Internet access from within the EVE-NG VM.
 
 ✅ Yes, you can absolutely use ishare2-cli on your local EVE-NG VM running in VMware Fusion. In fact, this is a great way to:
-	•	Test the setup and understand how ishare2 works.
-	•	Download and organize images before deploying on a cloud server.
-	•	Avoid wasting cloud resources (and cost) during your learning phase.
+- Test the setup and understand how ishare2 works.
+- Download and organize images before deploying on a cloud server.
+- Avoid wasting cloud resources (and cost) during your learning phase.
 
 ## Image Automation for EVE-NG with ishare2-cli
 As part of my journey from Packet Tracer to EVE-NG and beyond, I quickly realized that one of the most frustrating bottlenecks was hunting for reliable and compatible device images online. Forums were inconsistent, links expired, and half the time I was unsure if the image would even work.
@@ -1001,9 +991,9 @@ That all changed when I discovered ishare2-cli — an open-source CLI tool built
 ### Here's How to Use ishare2-cli on Your Local VMware EVE-NG
 
 **Prerequisites:**
-	•	Your EVE-NG VM is running on VMware Fusion, fully installed and updated.
-	•	You have SSH access or console access into the EVE-NG shell.
-	•	Your EVE-NG VM has internet access (NAT or bridged network works fine).
+- Your EVE-NG VM is running on VMware Fusion, fully installed and updated.
+- You have SSH access or console access into the EVE-NG shell.
+- Your EVE-NG VM has internet access (NAT or bridged network works fine).
 
 
 ### Step-by-Step: Installing ishare2-cli Inside Your EVE-NG VM
@@ -1080,20 +1070,20 @@ The difference between the vEOS Router and the vEOS Switch in EVE-NG lies in:
 | 🚫 Wrong permissions | EVE can’t access or boot properly | Run unl_wrapper -a fixpermissions after any image work |
 
 ⚙️ Why Test Locally?
-	•	You avoid cloud billing while learning.
-	•	You can verify images are working (console boots up, etc).
-	•	Once happy, you can migrate this .qcow2 library to a cloud server later.
+- You avoid cloud billing while learning.
+- You can verify images are working (console boots up, etc).
+- Once happy, you can migrate this .qcow2 library to a cloud server later.
 🔢 Estimate: Number of Nodes You Can Run
 Here’s a quick estimate of the types of images you can run and how many, assuming 12GB RAM assigned to EVE-NG and efficient CPU usage.
 
 | Image Type | RAM per Node | vCPU per Node | Est. Max Nodes | Use Case |
 |---|---|---|---|---|
-| Cisco IOL (Layer 2/3) | 128MB–256MB | ~5–10% | 15–25 nodes | CCNA/CCNP switching/routing |
-| Cisco vIOS-L2/L3 | 512MB–768MB | ~10–20% | 6–10 nodes | More realistic IOS XR labs |
-| MikroTik CHR | 256MB | Low | 10–15 nodes | Routing/Firewall labs |
-| FortiGate (low mem) | ~1024MB+ | Moderate | 4–6 nodes | Security labs |
-| Windows 7/10 | 1.5GB–2GB | Moderate/High | 2–3 max | Heavy, only for AD/domain labs |
-| Ubuntu CLI only | 512MB | Low | 6–10 nodes | Kali, OpenVPN, Auth, etc. |
+| Cisco IOL (Layer 2/3) | 128MB-256MB | ~5-10% | 15-25 nodes | CCNA/CCNP switching/routing |
+| Cisco vIOS-L2/L3 | 512MB-768MB | ~10-20% | 6-10 nodes | More realistic IOS XR labs |
+| MikroTik CHR | 256MB | Low | 10-15 nodes | Routing/Firewall labs |
+| FortiGate (low mem) | ~1024MB+ | Moderate | 4-6 nodes | Security labs |
+| Windows 7/10 | 1.5GB-2GB | Moderate/High | 2-3 max | Heavy, only for AD/domain labs |
+| Ubuntu CLI only | 512MB | Low | 6-10 nodes | Kali, OpenVPN, Auth, etc. |
 
 No—you shouldn’t need to resort to guestfish or manually mount the QCOW2 to tweak it, as long as you’re using ishare2-cli to pull your images.
 ishare2-cli already:
@@ -1102,9 +1092,9 @@ ishare2-cli already:
 	0.	Renames it to virtioa.qcow2 (or the appropriate default filename)
 	0.	Leaves it fully configured for EVE-NG’s defaults
 The only time you’d need to mount and edit with guestfish (or qemu-nbd, etc.) is if you want to:
-	•	Inject custom files (license files, scripts, certificates) into the image before first boot
-	•	Change default credentials or other OS-level settings baked into the image
-	•	Strip out unwanted services to slim it further
+- Inject custom files (license files, scripts, certificates) into the image before first boot
+- Change default credentials or other OS-level settings baked into the image
+- Strip out unwanted services to slim it further
 But for standard lab use—especially following the EVE-NG “HowTo” docs—you can skip all that. After your ishare2 pull <image> and /opt/unetlab/wrappers/unl_wrapper -a fixpermissions, just add the node in the GUI and boot it.
 If you do need to make small OS-level tweaks (e.g. adding SSH keys, custom banners), I’d recommend:
 
@@ -1213,12 +1203,12 @@ Both methods achieve the same result—pick whichever you find more comfortable.
 ```
 
 ## Catalyst 8000v Version Recommendation
-In EVE‑NG labs you want a balance between up‑to‑date features and resource usage. Here’s a quick pick:
+In EVE-NG labs you want a balance between up-to-date features and resource usage. Here’s a quick pick:
 
 Recommendation:
-	•	For resource‑constrained setups, start with c8000v-17.04.01 (1.3 GiB).
-	•	For production‑like CCNP Enterprise labs, use c8000v-17.09.01a (1.6 GiB) as a sweet spot.
-	•	If you need the latest enhancements, go with c8000v-17.16.01a (1.7 GiB).
+- For resource-constrained setups, start with c8000v-17.04.01 (1.3 GiB).
+- For production-like CCNP Enterprise labs, use c8000v-17.09.01a (1.6 GiB) as a sweet spot.
+- If you need the latest enhancements, go with c8000v-17.16.01a (1.7 GiB).
 
 ## Custom QEMU Template for CSR1000v
 If you’re using a custom QEMU template (shown below) and seeing CSR1000v boot failures:
@@ -1252,10 +1242,10 @@ Use EVE-NG’s built-in CSR1000v template or adjust your custom stanza to includ
 -rtc base=utc
 ```
 Key differences:
-	•	-smp cores=2,threads=1,sockets=1 binds 2 vCPUs in one socket.
-	•	-device virtio-scsi-pci and -device scsi-hd for disk bus.
-	•	-device virtio-net-pci for network.
-	•	-m 2048 allocates 2 GB RAM.
+- -smp cores=2,threads=1,sockets=1 binds 2 vCPUs in one socket.
+- -device virtio-scsi-pci and -device scsi-hd for disk bus.
+- -device virtio-net-pci for network.
+- -m 2048 allocates 2 GB RAM.
 With these settings, CSR1000v will find its packages, start critical services (nesd, etc.), and boot cleanly.
 
 ## CSR1000v User Access Verification
@@ -1264,8 +1254,8 @@ Username: cisco    Password: cisco
 # or sometimes
 Username: admin    Password: admin
 If neither pair works:
-	0.	Use the VM console (right‑click node > Console) to log in if possible.
-	0.	At the firepower‑bash prompt, enter configuration mode to reset or create a local user:
+	0.	Use the VM console (right-click node > Console) to log in if possible.
+	0.	At the firepower-bash prompt, enter configuration mode to reset or create a local user:
 
 ```bash
 enable
@@ -1278,20 +1268,20 @@ write memory
 	0.	Reconnect with your new credentials.
 If you cannot reach an enable prompt, ensure your template uses the builtin CSR1000v startup configuration, or reload the node and watch for the initial banner that shows the correct default credentials.
 
-## Recommended IOS XRv‑9000 (XRv9k) Lab Images
-When choosing an XRv9k build for CCNP/MPLS or service‑provider labs, you want enough features to practice routing protocols (OSPF, BGP, MPLS) but not so heavy it crashes your host. Below are the disk size (for reference) and the approximate RAM you should allocate:
+## Recommended IOS XRv-9000 (XRv9k) Lab Images
+When choosing an XRv9k build for CCNP/MPLS or service-provider labs, you want enough features to practice routing protocols (OSPF, BGP, MPLS) but not so heavy it crashes your host. Below are the disk size (for reference) and the approximate RAM you should allocate:
 
 | Image | Disk Size | Approx. RAM Required | Feature Notes | Recommendation |
 |---|---:|---:|---|---|
 | iosxrv9000-7-7-1 | 1.5 GiB | 2 GiB | Early 7.x feature set; stable | ✅ Good balance of features and resources |
 | iosxrv9000-7-11-1 | 1.7 GiB | 2.5 GiB | More recent bug fixes and updates | ✅ Recommended if you have extra headroom |
-| xrv9k-fullk9-24.3.1 | 1.6 GiB | 3 GiB | Newest 24.x train; advanced features | ✔️ Use for feature‑complete labs (if RAM allows) |
+| xrv9k-fullk9-24.3.1 | 1.6 GiB | 3 GiB | Newest 24.x train; advanced features | ✔️ Use for feature-complete labs (if RAM allows) |
 | xrv9k-fullk9-6.4.1 | 1.2 GiB | 1.5 GiB | Lightweight 6.x build | ⚡ Fast boot and minimal resources |
 | xrv-k9-demo-6.3.1 | 431 MiB | 512 MiB | Demo mode (limited features) | ⚠️ Only use for very basic connectivity tests |
 Recommendation:
-	•	For CCNP/SP routing labs, start with iosxrv9000-7-7-1 (allocate 2 GiB RAM) or xrv9k-fullk9-6.4.1 (allocate 1.5 GiB RAM) for best stability.
-	•	If you need the latest enterprise features, pick iosxrv9000-7-11-1 (2.5 GiB RAM) or xrv9k-fullk9-24.3.1 (3 GiB RAM).
-	•	The demo build (xrv-k9-demo-6.3.1) is too limited and only requires ~512 MiB but lacks full features—avoid unless you’re only testing basic L2/L3 connectivity.
+- For CCNP/SP routing labs, start with iosxrv9000-7-7-1 (allocate 2 GiB RAM) or xrv9k-fullk9-6.4.1 (allocate 1.5 GiB RAM) for best stability.
+- If you need the latest enterprise features, pick iosxrv9000-7-11-1 (2.5 GiB RAM) or xrv9k-fullk9-24.3.1 (3 GiB RAM).
+- The demo build (xrv-k9-demo-6.3.1) is too limited and only requires ~512 MiB but lacks full features—avoid unless you’re only testing basic L2/L3 connectivity.
 
 ## Infra Server Images for EVE-NG
 To round out your CCNA/CCNP infrastructure labs, you’ll need lightweight server images for DNS, DHCP, syslog, and Active Directory. Here are the recommended images and their pull commands:
@@ -1303,12 +1293,12 @@ To round out your CCNA/CCNP infrastructure labs, you’ll need lightweight serve
 | Windows Server 2019 | windows-server-2019-standard.qcow2 | 2 GiB | Manual download (Microsoft Eval ISO) |
 
 Notes:
-	•	Alpine is perfect for lightweight services (DNS, DHCP, syslog).
-	•	Ubuntu Server offers richer distro support (RADIUS, NTP).
-	•	Windows Server requires a valid ISO; upload to /opt/unetlab/addons/qemu/windows/, then convert to QCOW2.
+- Alpine is perfect for lightweight services (DNS, DHCP, syslog).
+- Ubuntu Server offers richer distro support (RADIUS, NTP).
+- Windows Server requires a valid ISO; upload to /opt/unetlab/addons/qemu/windows/, then convert to QCOW2.
 
-## Converting a Windows Server ISO to QCOW2 for EVE‑NG
-If you already have the Windows Server ISO on your host, follow these steps inside your EVE‑NG VM to create a usable QCOW2 disk image:
+## Converting a Windows Server ISO to QCOW2 for EVE-NG
+If you already have the Windows Server ISO on your host, follow these steps inside your EVE-NG VM to create a usable QCOW2 disk image:
 
 1. Create the target folder
 
@@ -1359,9 +1349,9 @@ virt-install \
 ```
 
 8. Add the node in the EVE-NG GUI
-	•	Choose QEMU > Windows > Windows Server 2019
-	•	Assign disk0.qcow2 as the image
-Your Windows Server VM will now boot from the installed QCOW2 disk. This approach avoids manual conversion pitfalls and ensures a fully installed, persistent OS in EVE‑NG.
+- Choose QEMU > Windows > Windows Server 2019
+- Assign disk0.qcow2 as the image
+Your Windows Server VM will now boot from the installed QCOW2 disk. This approach avoids manual conversion pitfalls and ensures a fully installed, persistent OS in EVE-NG.
 
 This series of commands sets up a virtualized Ubuntu 16.04 desktop environment inside EVE-NG, using QEMU for virtualization. Here's what each step does, with an explanation of how it relates to virtualization concepts like VMDK in VMware Fusion:
 
@@ -1373,9 +1363,9 @@ This series of commands sets up a virtualized Ubuntu 16.04 desktop environment i
 mv ubuntu-16.04.2-desktop-amd64.iso cdrom.iso
 ```
 
-	•	This renames the Ubuntu ISO file to cdrom.iso.
-	•	EVE-NG expects a file named cdrom.iso when booting a VM from an ISO during the first boot.
-	•	The ISO acts like a virtual DVD drive.
+- This renames the Ubuntu ISO file to cdrom.iso.
+- EVE-NG expects a file named cdrom.iso when booting a VM from an ISO during the first boot.
+- The ISO acts like a virtual DVD drive.
 
 2. Navigate to QEMU image directory for the VM template
 
@@ -1383,8 +1373,8 @@ mv ubuntu-16.04.2-desktop-amd64.iso cdrom.iso
 cd /opt/unetlab/addons/qemu/linux-ubuntu-desktop-16.04.02/
 ```
 
-	•	This is the path where EVE-NG stores its QEMU-based VM images (one folder per node/template).
-	•	You're entering the directory specific to your custom Ubuntu Desktop node.
+- This is the path where EVE-NG stores its QEMU-based VM images (one folder per node/template).
+- You're entering the directory specific to your custom Ubuntu Desktop node.
 
 3. Create a virtual hard drive
 
@@ -1392,20 +1382,20 @@ cd /opt/unetlab/addons/qemu/linux-ubuntu-desktop-16.04.02/
 /opt/qemu/bin/qemu-img create -f qcow2 virtioa.qcow2 30G
 ```
 
-	•	This is the key step: you're creating a virtual hard disk for your Ubuntu node.
-	•	qcow2 is QEMU’s advanced disk format (similar to .vmdk in VMware).
-	•	It supports compression, snapshots, and dynamic sizing.
-	•	virtioa.qcow2 is the name of the disk. "Virtio" refers to a high-performance virtualized driver used in KVM/QEMU VMs.
-	•	30G specifies a max disk size of 30 GB (like allocating a 30 GB VMDK in VMware Fusion).
-	•	This is what Ubuntu will install onto during the first boot from the ISO.
+- This is the key step: you're creating a virtual hard disk for your Ubuntu node.
+- qcow2 is QEMU’s advanced disk format (similar to .vmdk in VMware).
+- It supports compression, snapshots, and dynamic sizing.
+- virtioa.qcow2 is the name of the disk. "Virtio" refers to a high-performance virtualized driver used in KVM/QEMU VMs.
+- 30G specifies a max disk size of 30 GB (like allocating a 30 GB VMDK in VMware Fusion).
+- This is what Ubuntu will install onto during the first boot from the ISO.
 
 ### Comparison to VMware Fusion
 Think of this as creating a new .vmdk for a VMware VM before installing an OS. You're defining how much space the VM can use, but actual disk usage grows as needed.
 
 4. Create a lab and add the node
-	•	You now go into EVE-NG's web interface and create a lab.
-	•	Add a node that uses the linux-ubuntu-desktop-16.04.02 QEMU template.
-	•	When this node boots, it will load the cdrom.iso to install Ubuntu onto virtioa.qcow2.
+- You now go into EVE-NG's web interface and create a lab.
+- Add a node that uses the linux-ubuntu-desktop-16.04.02 QEMU template.
+- When this node boots, it will load the cdrom.iso to install Ubuntu onto virtioa.qcow2.
 
 5. Remove the ISO after installation
 
@@ -1413,14 +1403,14 @@ Think of this as creating a new .vmdk for a VMware VM before installing an OS. Y
 rm -f cdrom.iso
 ```
 
-	•	After the OS has been installed onto the virtual hard disk, the ISO is no longer needed.
-	•	Removing it simulates "ejecting the installation disc."
-	•	Ensures the VM boots from the disk next time instead of looping back to the ISO.
+- After the OS has been installed onto the virtual hard disk, the ISO is no longer needed.
+- Removing it simulates "ejecting the installation disc."
+- Ensures the VM boots from the disk next time instead of looping back to the ISO.
 
 This summary is conceptually identical to:
-	•	Creating a new virtual disk (VMDK) in VMware,
-	•	Mounting an ISO to boot and install the OS, and
-	•	Removing the ISO after installation to boot normally from the virtual hard disk.
+- Creating a new virtual disk (VMDK) in VMware,
+- Mounting an ISO to boot and install the OS, and
+- Removing the ISO after installation to boot normally from the virtual hard disk.
 But here you're doing it manually with QEMU inside EVE-NG, which runs as a nested virtualization environment (on top of VMware, Proxmox, etc.).
 
 
@@ -1459,7 +1449,7 @@ mv kali-linux-2022.1-installer-amd64.iso /opt/unetlab/addons/qemu/linux-kali-202
 
 
 ### Step 3: Create HDD (qcow2 format)
-Choose desired size (e.g., 40 GB for Windows, 15–30 GB for Linux).
+Choose desired size (e.g., 40 GB for Windows, 15-30 GB for Linux).
 
 ```bash
 /opt/qemu/bin/qemu-img create -f qcow2 virtioa.qcow2 30G
@@ -1471,8 +1461,8 @@ Choose desired size (e.g., 40 GB for Windows, 15–30 GB for Linux).
 	0.	Add Node using the name of the folder you created
 	0.	Start the VM — it will boot from the ISO
 	0.	Install the OS manually
-	•	For Linux: Install to /dev/vda
-	•	For Windows: Use the VirtIO drivers if required
+- For Linux: Install to /dev/vda
+- For Windows: Use the VirtIO drivers if required
 
 ### Step 5: Post-Install Cleanup (Commit)
 After the OS is installed:
@@ -1487,10 +1477,10 @@ rm -f cdrom.iso
 ✅ This finalizes the image so it can be cloned as a reusable node.
 Boot Kali VM in your EVE-NG lab with the cdrom.iso attached
 Install Kali to the virtioa.qcow2 hard disk
-	•	This is the key step — ensure Kali is fully installed onto the virtual HDD
+- This is the key step — ensure Kali is fully installed onto the virtual HDD
 Reboot Kali
-	•	During reboot, Kali should boot from virtioa.qcow2, not the ISO
-	•	If it boots correctly and logs you into the installed OS, the ISO is no longer needed
+- During reboot, Kali should boot from virtioa.qcow2, not the ISO
+- If it boots correctly and logs you into the installed OS, the ISO is no longer needed
 ✅ At this point, you can safely delete cdrom.iso
 
 
@@ -1548,29 +1538,29 @@ echo "✅ Folder $IMGDIR is ready. Add to a lab and install OS."
 
 
 Quick summary of what that means:
-	•	When you boot into emergency mode (via GRUB or a recovery environment), you’re actually running a minimal Linux shell on your real system, but without starting all the usual services.
-	•	You have direct access to your files (like /etc/network/interfaces) and can edit them to fix problems blocking normal boot.
-	•	So yes, you are “in” your Linux filesystem, but it’s a minimal environment designed for troubleshooting.
+- When you boot into emergency mode (via GRUB or a recovery environment), you’re actually running a minimal Linux shell on your real system, but without starting all the usual services.
+- You have direct access to your files (like /etc/network/interfaces) and can edit them to fix problems blocking normal boot.
+- So yes, you are “in” your Linux filesystem, but it’s a minimal environment designed for troubleshooting.
 
 How to ask an AI to get the recovery steps again:
 Try asking something like:
-	•	“How do I recover a Linux system that won’t boot because of a bad network config?”
-	•	“Steps to boot into emergency mode on Ubuntu/EVE-NG and fix /etc/network/interfaces”
-	•	“How to fix networking errors causing systemd networking service failure on Linux?”
-	•	“How to repair broken network config in Linux when system won’t start networking?”
+- “How do I recover a Linux system that won’t boot because of a bad network config?”
+- “Steps to boot into emergency mode on Ubuntu/EVE-NG and fix /etc/network/interfaces”
+- “How to fix networking errors causing systemd networking service failure on Linux?”
+- “How to repair broken network config in Linux when system won’t start networking?”
 
 Explanation:
-	•	eth0 and eth1 are the physical NICs on your EVE-NG host.
-	•	pnet0 and pnet1 are Linux bridge interfaces connected to eth0 and eth1 respectively.
-	•	Both bridges are set to get IP via DHCP from your home LAN/network (or wherever your EVE-NG host is connected).
-	•	This allows your VMs or nodes attached to these clouds (pnet0, pnet1) to get IPs from your DHCP server and access the internet.
-	•	bridge_fd 0 disables forwarding delay (good for faster bridge startup).
+- eth0 and eth1 are the physical NICs on your EVE-NG host.
+- pnet0 and pnet1 are Linux bridge interfaces connected to eth0 and eth1 respectively.
+- Both bridges are set to get IP via DHCP from your home LAN/network (or wherever your EVE-NG host is connected).
+- This allows your VMs or nodes attached to these clouds (pnet0, pnet1) to get IPs from your DHCP server and access the internet.
+- bridge_fd 0 disables forwarding delay (good for faster bridge startup).
 
 Troubleshooting tips:
-	•	Make sure eth0 and eth1 are physical interfaces actually present on your host (ip link show).
-	•	Make sure your DHCP server is active on the physical network your EVE-NG host is connected to.
-	•	If you want to use only one interface, configure only pnet0 as above.
-	•	Don’t mix manual and dhcp on the same interface in confusing ways; keep physical interfaces manual, bridges dhcp.
+- Make sure eth0 and eth1 are physical interfaces actually present on your host (ip link show).
+- Make sure your DHCP server is active on the physical network your EVE-NG host is connected to.
+- If you want to use only one interface, configure only pnet0 as above.
+- Don’t mix manual and dhcp on the same interface in confusing ways; keep physical interfaces manual, bridges dhcp.
 
 A clear explanation of how macOS turns bridge101 into a NAT gateway and what it means for your EVE-NG lab:
 
@@ -1714,8 +1704,8 @@ Result: R1 and R2 CANNOT communicate (separate Layer 2 domains)
 Why: The two bridges are completely separate - no connection between them
 
 To enable communication, you need:
-	•	Routing enabled on EVE-NG host (iptables forwarding), OR
-	•	A router device with interfaces in both networks
+- Routing enabled on EVE-NG host (iptables forwarding), OR
+- A router device with interfaces in both networks
 
 ### Your MacBook's Current Network Configuration
 
@@ -1901,9 +1891,9 @@ interface Vlan1                             ← IP on SVI (virtual interface)
 ```
 
 Why:
-	•	Physical switch ports operate at Layer 2 (MAC addresses)
-	•	Management IP goes on SVI (Switch Virtual Interface)
-	•	SVI is tied to a VLAN, not a physical port
+- Physical switch ports operate at Layer 2 (MAC addresses)
+- Management IP goes on SVI (Switch Virtual Interface)
+- SVI is tied to a VLAN, not a physical port
 Traffic flow for switch management:
 Ansible (192.168.33.10)
     → Cloud0
@@ -1957,12 +1947,12 @@ The root cause (important)
 On macOS, VMware does NOT automatically create a macOS bridge for every Host-Only network.
 No bridge on the host = no Layer-2 path = no traffic leaves that segment
 So:
-	•	vmnet1 → backed by bridge100
-	•	vmnet8 → backed by bridge101
-	•	vmnet2 → exists in VMware config only, not on macOS networking stack
+- vmnet1 → backed by bridge100
+- vmnet8 → backed by bridge101
+- vmnet2 → exists in VMware config only, not on macOS networking stack
 That’s why:
-	•	pnet2 can talk to itself
-	•	but cannot talk to anything else
+- pnet2 can talk to itself
+- but cannot talk to anything else
 This is not a Linux config issue inside EVE.It is a host-side virtual switching issue. 
 To enable pnet2 (10.200.200.0/24) to be reachable from pnet0 and pnet1 you need Layer-3 routing or Layer-2 bridging.
 Solution 1 — Bridge vmnet2 to macOS (hacky, fragile)
@@ -1992,9 +1982,9 @@ And ensure iptables is not blocking forwarding:
 iptables -P FORWARD ACCEPT
 ```
 For a More Realistic LAB, Here’s What you want
-	•	pnet0 (192.168.33.0/24) → Ansible management → pnet1 + pnet2
-	•	pnet1 ↔ pnet2 ❌ (must remain isolated)
-	•	Routing between pnet1 and pnet2 later via a router inside EVE topology
+- pnet0 (192.168.33.0/24) → Ansible management → pnet1 + pnet2
+- pnet1 ↔ pnet2 ❌ (must remain isolated)
+- Routing between pnet1 and pnet2 later via a router inside EVE topology
 
 On EVE VM only:
 
@@ -2018,36 +2008,36 @@ iptables -A FORWARD -i pnet1 -o pnet2 -j DROP
 iptables -A FORWARD -i pnet2 -o pnet1 -j DROP
 ```
 
-	•	Ansible control node on pnet0 (192.168.33.0/24)
-	•	Devices(Routers/Switches) on pnet1 (172.16.47.0/24)
-	•	Devices(Routers/Switches) on pnet2 (10.200.200.0/24)
-	•	EVE VM does the management routing only
-	•	pnet1 ↔ pnet2 remain isolated
-	•	Later, you add a router inside the EVE topology to handle pnet1↔pnet2 like a real network
+- Ansible control node on pnet0 (192.168.33.0/24)
+- Devices(Routers/Switches) on pnet1 (172.16.47.0/24)
+- Devices(Routers/Switches) on pnet2 (10.200.200.0/24)
+- EVE VM does the management routing only
+- pnet1 ↔ pnet2 remain isolated
+- Later, you add a router inside the EVE topology to handle pnet1↔pnet2 like a real network
 Because:
-	•	Normal kernel routing works
-	•	You are not forcing source interfaces
-	•	SSH behaves exactly like ping without -I
-	•	Ansible will follow the same routing logic
+- Normal kernel routing works
+- You are not forcing source interfaces
+- SSH behaves exactly like ping without -I
+- Ansible will follow the same routing logic
 This is a proper, professional lab design:
-	•	Management-plane routing via EVE
-	•	Data-plane routing via lab routers
-	•	Clear separation of concerns
-	•	No VMware hacks
-	•	Fully reproducible
+- Management-plane routing via EVE
+- Data-plane routing via lab routers
+- Clear separation of concerns
+- No VMware hacks
+- Fully reproducible
 
 Advantages:
 
-	•	Three separate networks
-	•	One with internet for management
-	•	Two completely isolated for safe testing
-	•	No dependency on physical adapters
-	•	Simulates real multi-site architecture
+- Three separate networks
+- One with internet for management
+- Two completely isolated for safe testing
+- No dependency on physical adapters
+- Simulates real multi-site architecture
 
 Avoid Bridged mode because:
-	•	Limited to SmartPhone hotspot's tiny /28 network (14 IPs)
-	•	Exposes lab devices to mobile data network
-	•	No benefit over NAT for your use case
+- Limited to SmartPhone hotspot's tiny /28 network (14 IPs)
+- Exposes lab devices to mobile data network
+- No benefit over NAT for your use case
 
 ### Key Configuration Locations
 
@@ -2098,9 +2088,9 @@ iface pnetX inet manual  → No IP configuration
 6. SmartPhone hotspot limitation - /28 network (14 IPs) makes bridged mode impractical for labs
 7. Isolation levels:
 
-	•	NAT: Isolated from home network, has internet
-	•	Host-only: Completely isolated, no internet
-	•	Bridged: No isolation, on real network
+- NAT: Isolated from home network, has internet
+- Host-only: Completely isolated, no internet
+- Bridged: No isolation, on real network
 
 ### End Notes
 
@@ -2137,10 +2127,10 @@ Network Adapter 3:   Not connected                     ← This becomes eth2
 ```
 
 Translation:
-	•	First adapter (Network Adapter) = eth0
-	•	Second adapter (Network Adapter 2) = eth1
-	•	Third adapter (Network Adapter 3) = eth2
-	•	And so on...
+- First adapter (Network Adapter) = eth0
+- Second adapter (Network Adapter 2) = eth1
+- Third adapter (Network Adapter 3) = eth2
+- And so on...
 The numbering is based on the ORDER in VMware settings, not the vmnet number!
 
 #### Step 2: EVE-NG eth Interfaces → pnet Bridges
@@ -2168,9 +2158,9 @@ iface pnet2 inet manual
 ```
 
 Translation:
-	•	eth0 → bridged to → pnet0
-	•	eth1 → bridged to → pnet1
-	•	eth2 → bridged to → pnet2
+- eth0 → bridged to → pnet0
+- eth1 → bridged to → pnet1
+- eth2 → bridged to → pnet2
 The pnet number always matches the eth number!
 
 #### Step 3: pnet Interfaces → EVE-NG Cloud Objects
@@ -2412,10 +2402,10 @@ Adapter Position 4  →  eth3  →  pnet3  →  Cloud3
 
 Key insight:
 
-	•	The position in VMware determines eth number
-	•	eth number determines pnet number (always same)
-	•	pnet number determines Cloud number (always same)
-	•	The vmnet type (NAT/Host-only/Bridged) determines what network the Cloud connects to
+- The position in VMware determines eth number
+- eth number determines pnet number (always same)
+- pnet number determines Cloud number (always same)
+- The vmnet type (NAT/Host-only/Bridged) determines what network the Cloud connects to
 
 To know which Cloud to use: Check ip addr show on EVE-NG to see which pnet has which network, then use the corresponding Cloud number!
 
@@ -3046,14 +3036,14 @@ host_key_checking = False
 
 ### Jinja2 Templating in Ansible
 Jinja2 is a popular templating language for Python. Ansible uses Jinja2 to handle any variable substitution, logic, and dynamic content generation within its files, most notably in configuration files (.j2 templates) and playbooks.
-	•	Variables: Jinja2 is what allows you to use double curly braces ({{ variable_name }}) to insert dynamic data (like IP addresses, hostnames, or credentials) into templates or playbook tasks.
-	•	Logic: It also allows for control structures like loops ({% for item in list %}) and conditionals ({% if condition %}) directly within your templates to generate configurations that vary based on host facts or defined variables.
+- Variables: Jinja2 is what allows you to use double curly braces ({{ variable_name }}) to insert dynamic data (like IP addresses, hostnames, or credentials) into templates or playbook tasks.
+- Logic: It also allows for control structures like loops ({% for item in list %}) and conditionals ({% if condition %}) directly within your templates to generate configurations that vary based on host facts or defined variables.
 
 #### jinja2_extensions
 The jinja2_extensions setting allows you to enable optional features that are not part of the standard Jinja2 language set.
-	•	jinja2_extensions = jinja2.ext.do,jinja2.ext.i18n
-	•	jinja2.ext.do: This is the most common extension used in Ansible. It allows you to use the {% do ... %} tag in templates. This tag lets you execute statements (like adding an item to a list or calling a function) that do not return any output. This is useful for manipulating variables within a template.
-	•	jinja2.ext.i18n: This extension adds support for Internationalization (i18n), typically used for translating content in web application templates, though less common in network automation.
+- jinja2_extensions = jinja2.ext.do,jinja2.ext.i18n
+- jinja2.ext.do: This is the most common extension used in Ansible. It allows you to use the {% do ... %} tag in templates. This tag lets you execute statements (like adding an item to a list or calling a function) that do not return any output. This is useful for manipulating variables within a template.
+- jinja2.ext.i18n: This extension adds support for Internationalization (i18n), typically used for translating content in web application templates, though less common in network automation.
 
 #### Related Jinja2 Configuration Options
 These settings also control how Ansible interacts with the Jinja2 engine and variable rendering:
@@ -3067,7 +3057,7 @@ These settings also control how Ansible interacts with the Jinja2 engine and var
 
 Template Example (interface-template.j2):
 
-```jinja2
+```text
 {% for iname, idata in interfaces.items() %}
 interface {{ iname }}
  description {{ idata.description }}
@@ -3076,8 +3066,6 @@ interface {{ iname }}
 ```
 
 Variables Example (ansible-vars.json):
-
-YAML
 
 ```yaml
 interfaces:
@@ -3090,7 +3078,8 @@ interfaces:
 ### Ansible Facts
 When Ansible connects, it gathers and parses useful facts (OS Version, Hostname, Interface status, etc.).
 - Usage: Stored to disk for reference or used as runtime variables for conditional logic (e.g., only configure devices with "SJC" in the hostname).
-Example Output: YAML
+
+Example Output:
 
 ```yaml
 ansible_net_hostname: CSR-1000V

@@ -15,7 +15,7 @@
 ### Systems & Architecture
 
 - Azure & AWS: [system-architecture/system-administration/Azure_AWS.md](system-architecture/system-administration/Azure_AWS.md)
-- Reverse engineering & system architecture: [system-architecture/reverse-engineering/Reverse_Engineering_$ystem_Architecture.md](system-architecture/reverse-engineering/Reverse_Engineering_$ystem_Architecture.md)
+- Reverse engineering & system architecture: [system-architecture/reverse-engineering/Reverse_Engineering_System_Architecture.md](system-architecture/reverse-engineering/Reverse_Engineering_System_Architecture.md)
 
 ### Security
 

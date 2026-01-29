@@ -1,50 +1,100 @@
-1. CHAPTER 1: OSI & TCP/IP IMPLEMENTATION OF NETWORKING PROTOCOLS
+# Networking Protocols - CCNA/CCNP Study Guide
 
-2. CHAPTER 2: TCP/IP NETWORK MODEL AND IMPLEMENTATION
+## Table of Contents
 
-3. CHAPTER 3: INTERNET PROTOCOL ADDRESSING TECHNIQUES
+1. OSI & TCP/IP Implementation of Networking Protocols
+2. TCP/IP Network Model and Implementation
+3. Internet Protocol Addressing Techniques
+4. Transport Layer
+5. Application Layer
+6. Voice and Video Protocols
+7. Cabling Standards (Ethernet & Fibre)
+8. Device Categorization
+9. Device Configuration
+10. Switches (Layer 2)
+11. Routers (Layer 3)
+12. Management Plane/Layer Protocols
+13. Control Plane/Layer Protocols
+14. Network Device Security
+15. Architecture, Design, Topology
+16. Troubleshooting & Information Gathering Tools
+17. Network Troubleshooting Methodology
+18. Wireless Standard & Wireless Security
+19. Software Defined Networking
+20. Infrastructure as Code (IaC): Automation & Orchestration
 
-4. CHAPTER 4: TRANSPORT LAYER
-
-5. CHAPTER 5: APPLICATION LAYER
-
-6. CHAPTER 6: VOICE AND VIDEO PROTOCOLS
-
-7. CHAPTER 7: CABLING STANDARDS (ETHERNET && FIBRE)
-
-8. CHAPTER 8: DEVICE CATEGORIZATION
-
-9. CHAPTER 9: DEVICE CONFIGURATION
-
-10. CHAPTER 10: SWITCHES (LAYER 2)
-
-11. CHAPTER 11: ROUTERS (LAYER 3)
-
-12. CHAPTER 12: MANAGEMENT PLANE/LAYER PROTOCOLS
-
-13. CHAPTER 13: CONTROL PLANE/LAYER PROTOCOLS
-
-14. CHAPTER 14: NETWORK DEVICE SECURITY
-
-15. CHAPTER 15: ARCHITECTURE, DESIGN, TOPOLOGY
-
-16. CHAPTER 16: TROUBLESHOOTING & INFORMATION GATHERING TOOLS
-
-17. CHAPTER 17: NETWORK TROUBLESHOOTING METHODOLOGY
-
-18. CHAPTER 18: WIRELESS STANDARD & WIRELESS SECURITY
-
-19. CHAPTER 19: SOFTWARE DEFINED NETWORKING
-
-20. CHAPTER 20: INFRASTRUCTURE AS CODE (IAC): AUTOMATION & ORCHESTRATION
 ---
 
-# CHAPTER 1: OSI & TCP/IP IMPLEMENTATION OF NETWORKING PROTOCOLS
+## Chapter 1: OSI & TCP/IP Implementation of Networking Protocols
 
 A NETWORK is two or more computers or devices that are linked in order to share information. Networks are broken into different subsets based on their size and function. The OSI (Open Systems Interconnection) model provides a conceptual framework for understanding network functions.
 The OSI Model was developed in the 1970s and 1980s, and it is a conceptual model that breaks networking into seven separate layers. Each layer refers to a set of functions that are responsible for specific tasks. In the OSI model, the definition of the application layer is narrower in scope. The OSI model defines the application layer as only the interface responsible for communicating with host-based and user-facing applications. OSI then explicitly distinguishes the functionality of two additional layers, the session layer and presentation layer, as separate levels below the application layer and above the transport layer. OSI specifies a strict modular separation of functionality at these layers and provides protocol implementations for each. In contrast, the Internet Protocol Suite compiles these functions into a single layer.
-￼
+
 The processes of encapsulation and de-encapsulation work in exactly the same way with the TCP/IP model as they do with the OSI model. At each layer of the this models a header is added during Data_encapsulation, and removed during Data_de-encapsulation.
+
+**OSI Model - 7 Layers with Data Encapsulation:**
+
+```mermaid
+graph TB
+    subgraph Sender["Sender: Data Encapsulation ⬇"]
+        L7S["Layer 7: Application\nHTTP, FTP, DNS, SMTP\nUser data"]
+        L6S["Layer 6: Presentation\nEncryption, Compression\nSSL/TLS, JPEG"]
+        L5S["Layer 5: Session\nSession management\nNetBIOS, RPC"]
+        L4S["Layer 4: Transport\nTCP/UDP Headers\nSegments/Datagrams\nPort numbers"]
+        L3S["Layer 3: Network\nIP Header\nPackets\nSource/Dest IP addresses"]
+        L2S["Layer 2: Data Link\nMAC Header + Trailer\nFrames\nSource/Dest MAC addresses"]
+        L1S["Layer 1: Physical\nBits\nElectrical signals, cables\n1s and 0s"]
+    end
+
+    Medium["Transmission Medium\nEthernet, WiFi, Fiber"]
+
+    subgraph Receiver["Receiver: Data De-encapsulation ⬆"]
+        L1R["Layer 1: Physical\nBits received\nConvert signals to data"]
+        L2R["Layer 2: Data Link\nRemove MAC Header/Trailer\nCheck frame integrity"]
+        L3R["Layer 3: Network\nRemove IP Header\nRoute to correct host"]
+        L4R["Layer 4: Transport\nRemove TCP/UDP Header\nReassemble segments"]
+        L5R["Layer 5: Session\nManage session state"]
+        L6R["Layer 6: Presentation\nDecrypt, Decompress"]
+        L7R["Layer 7: Application\nDeliver to application\nUser sees data"]
+    end
+
+    L7S -->|Add headers| L6S
+    L6S -->|Add headers| L5S
+    L5S -->|Add headers| L4S
+    L4S -->|Add TCP/UDP header| L3S
+    L3S -->|Add IP header| L2S
+    L2S -->|Add MAC header/trailer| L1S
+    L1S -->|Transmit bits| Medium
+
+    Medium -->|Receive bits| L1R
+    L1R -->|Remove physical encoding| L2R
+    L2R -->|Strip MAC header/trailer| L3R
+    L3R -->|Strip IP header| L4R
+    L4R -->|Strip TCP/UDP header| L5R
+    L5R -->|Session data| L6R
+    L6R -->|Decoded data| L7R
+
+    PDU1["PDU at each layer:\nL7-L5: Data\nL4: Segment/Datagram\nL3: Packet\nL2: Frame\nL1: Bits"]
+
+    style L7S fill:#E74C3C,color:#fff
+    style L6S fill:#E67E22,color:#fff
+    style L5S fill:#F39C12,color:#fff
+    style L4S fill:#F1C40F,color:#000
+    style L3S fill:#2ECC71,color:#fff
+    style L2S fill:#3498DB,color:#fff
+    style L1S fill:#9B59B6,color:#fff
+    style L7R fill:#E74C3C,color:#fff
+    style L6R fill:#E67E22,color:#fff
+    style L5R fill:#F39C12,color:#fff
+    style L4R fill:#F1C40F,color:#000
+    style L3R fill:#2ECC71,color:#fff
+    style L2R fill:#3498DB,color:#fff
+    style L1R fill:#9B59B6,color:#fff
+    style Medium fill:#34495E,color:#fff
+    style PDU1 fill:#FFF9C4,stroke:#F39C12
+```
+
+*Figure: OSI Model showing data encapsulation (adding headers at each layer) on the sender side and de-encapsulation (removing headers) on the receiver side. Each layer has a specific Protocol Data Unit (PDU) name.*
 
 ### Layer 1: Physical Layer (Cabling involving Data Bits/Streams))
 
@@ -103,6 +153,50 @@ The Transport layer refers to how data is actually transferred. The transport la
 * **Units:** Segments (TCP) or Datagrams (UDP).
 * **Protocols:** TCP (Transmission Control Protocol), UDP (User Datagram Protocol), SCTP (Stream Control Transmission Protocol), DCCP (Datagram Congestion Control Protocol).
 
+**TCP Three-Way Handshake - Connection Establishment:**
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Server
+
+    Note over Client,Server: TCP Three-Way Handshake\nEstablishes Connection
+
+    Client->>Server: 1. SYN\nSEQ = 1000\nPort: Random → 80
+    Note left of Client: Client initiates connection\nState: SYN_SENT\nChooses initial SEQ number
+
+    Server->>Client: 2. SYN-ACK\nSEQ = 5000, ACK = 1001\nPort: 80 → Random
+    Note right of Server: Server acknowledges\nState: SYN_RECEIVED\nChooses own SEQ, ACKs client SEQ+1
+
+    Client->>Server: 3. ACK\nSEQ = 1001, ACK = 5001\nPort: Random → 80
+    Note left of Client: Client acknowledges\nState: ESTABLISHED\nACKs server SEQ+1
+
+    Note over Server: State: ESTABLISHED
+    Note over Client,Server: Connection Ready for Data Transfer
+
+    rect rgb(240, 255, 240)
+        Note over Client,Server: Data Exchange Phase
+        Client->>Server: Data Segment\nSEQ = 1001, ACK = 5001\n100 bytes of data
+        Server->>Client: ACK\nSEQ = 5001, ACK = 1101\nAcknowledges 100 bytes received
+    end
+
+    rect rgb(255, 240, 240)
+        Note over Client,Server: Connection Termination (4-Way)
+        Client->>Server: FIN\nSEQ = 1101, ACK = 5001
+        Server->>Client: ACK\nSEQ = 5001, ACK = 1102
+        Server->>Client: FIN\nSEQ = 5001, ACK = 1102
+        Client->>Server: ACK\nSEQ = 1102, ACK = 5002
+    end
+
+    Note over Client,Server: Connection Closed
+
+    KeyConcepts["Key TCP Features:\n✓ Reliable: Guarantees delivery via ACKs\n✓ Connection-oriented: Handshake before data\n✓ Flow control: Window size management\n✓ Congestion control: Prevents network overload\n✓ Error detection: Checksums verify integrity"]
+
+    style KeyConcepts fill:#FFF9C4,stroke:#F39C12
+```
+
+*Figure: TCP three-way handshake for connection establishment. Client sends SYN, server responds with SYN-ACK, client sends final ACK. Connection state progresses from SYN_SENT → SYN_RECEIVED → ESTABLISHED. TCP ensures reliable, ordered data delivery through sequence numbers and acknowledgments.*
+
 ### Layer 5: Session Layer
 When two computers or devices have established connection / started an exchange of information, we call that a session. The Session layer in OSI is responsible for opening, closing, and maintaining sessions. In terms of opening and closing, the session layer includes authentication and authorization measures. For example, without logging in or having the right permissions, you may not be able to connect to parts of a website. But if you are logged in, your access permission is stored for a set amount of time, or session length.
 * **Function:** Establishes, manages, and terminates the connections (sessions) between applications. It enables the applications to send and receive data in an organized manner.
@@ -136,7 +230,7 @@ The application layer of the OSI model essentially provides networking options t
 ---
 
 
-# CHAPTER 2: TCP/IP NETWORK MODEL AND IMPLEMENTATION 
+## Chapter 2: TCP/IP Network Model and Implementation 
 In the Internet protocol suite, the application layer contains the communications protocols and interface methods used in process-to-process communications across an Internet Protocol (IP) computer network. The application layer only standardizes communication and depends upon the underlying transport layer protocols to establish host-to-host data transfer channels and manage the data exchange in a client–server or peer-to-peer networking model. Though the TCP/IP application layer does not describe specific rules or data formats that applications must consider when communicating, the original specification (in RFC 1123) does rely on and recommend the robustness principle for application design.
 You will hear more often about the TCP/IP model, which is a 4-Abstraction layered model that makes direct reference to current Internet implementations. Its foundational protocols are TCP and IP.
 
@@ -153,6 +247,55 @@ You will hear more often about the TCP/IP model, which is a 4-Abstraction layere
 | **Relevance** | Primary reference model for understanding networking | Practical model for Internet communication      |
 | **Interoperability**| More rigid due to strict layering             | More adaptable, easier for cross-platform communication |
 | **Security** | Security considerations at all layers (conceptual) | Security often implemented at specific layers (e.g., IPSec at Network) |
+
+**TCP/IP Model vs OSI Model Layer Mapping:**
+
+```mermaid
+graph LR
+    subgraph OSI["OSI Model (7 Layers)"]
+        direction TB
+        O7["Layer 7: Application\nHTTP, FTP, DNS"]
+        O6["Layer 6: Presentation\nSSL/TLS, JPEG"]
+        O5["Layer 5: Session\nNetBIOS, RPC"]
+        O4["Layer 4: Transport\nTCP, UDP"]
+        O3["Layer 3: Network\nIP, ICMP, ARP"]
+        O2["Layer 2: Data Link\nEthernet, 802.11"]
+        O1["Layer 1: Physical\nCables, Signals"]
+    end
+    
+    subgraph TCPIP["TCP/IP Model (4 Layers)"]
+        direction TB
+        T4["Layer 4: Application Layer\nCombines OSI 7, 6, 5\nHTTP, FTP, DNS, SMTP\nSSL/TLS, Session Management"]
+        T3["Layer 3: Transport Layer\nMaps to OSI Layer 4\nTCP, UDP\nPort-based communication"]
+        T2["Layer 2: Internet Layer\nMaps to OSI Layer 3\nIP, ICMP, IGMP\nRouting & logical addressing"]
+        T1["Layer 1: Network Access/Link Layer\nCombines OSI 2 & 1\nEthernet, 802.11, ARP\nPhysical + Data Link"]
+    end
+    
+    O7 -.->|Maps to| T4
+    O6 -.->|Maps to| T4
+    O5 -.->|Maps to| T4
+    O4 -.->|Maps to| T3
+    O3 -.->|Maps to| T2
+    O2 -.->|Maps to| T1
+    O1 -.->|Maps to| T1
+    
+    KeyDiff["Key Differences:\n✓ OSI: 7 strict layers, conceptual\n✓ TCP/IP: 4 practical layers\n✓ OSI: Protocol-independent framework\n✓ TCP/IP: Built around Internet protocols\n✓ TCP/IP merges adjacent layers for efficiency"]
+    
+    style O7 fill:#E74C3C,color:#fff
+    style O6 fill:#E67E22,color:#fff
+    style O5 fill:#F39C12,color:#fff
+    style O4 fill:#F1C40F,color:#000
+    style O3 fill:#2ECC71,color:#fff
+    style O2 fill:#3498DB,color:#fff
+    style O1 fill:#9B59B6,color:#fff
+    style T4 fill:#E74C3C,color:#fff
+    style T3 fill:#F1C40F,color:#000
+    style T2 fill:#2ECC71,color:#fff
+    style T1 fill:#3498DB,color:#fff
+    style KeyDiff fill:#FFF9C4,stroke:#F39C12
+```
+
+*Figure: Comparison of OSI 7-layer model with TCP/IP 4-layer model. TCP/IP combines OSI's Application, Presentation, and Session layers into a single Application layer, and merges Physical and Data Link into the Network Access layer.*
 
 ### Network Interface layer / LINK LAYER
 This layer emcompasses group of methods and communications protocols confined to the link that a host is physically connected to i.e the physical interface between the host system and the network hardware. It defines how data packets are to be formatted for transmission and routings. The link is the physical and logical network component used to interconnect hosts or nodes in the network and a link protocol is a suite of methods and standards that operate only between adjacent network nodes of a network segment. The link layer includes the protocols that define communication between local (on-link) network nodes which fulfill the purpose of maintaining link states between the local nodes, such as the local network topology, and that usually use protocols that are based on the framing of packets specific to the link types.  
@@ -223,9 +366,96 @@ This includes the opening and closing of sessions, translating data, and the int
 
 
 
-# CHAPTER 3: INTERNET PROTOCOL ADDRESSING TECHNIQUES 
+## Chapter 3: Internet Protocol Addressing Techniques 
 
 ### Internet Protocols Packet Structure: IPv4 Header
+
+```mermaid
+graph LR
+    subgraph "IPv4 Header (20-60 bytes)"
+        direction TB
+        IPv4["IPv4 Packet Header Fields:\n\n┌────────────────────────────────────┐\n│ Version(4b) │ IHL(4b) │ DSCP/ToS(8b) │\n├──────────────────────────────────────┤\n│ Total Length (16 bits) │\n├──────────────────────────────────────┤\n│ Identification (16 bits) │\n├──────────────────────────────────────┤\n│ Flags(3b) │ Fragment Offset(13b) │\n├──────────────────────────────────────┤\n│ Time to Live (8b) │ Protocol (8b) │\n├──────────────────────────────────────┤\n│ Header Checksum (16 bits) │\n├──────────────────────────────────────┤\n│ Source IP Address (32 bits) │\n├──────────────────────────────────────┤\n│ Destination IP Address (32 bits) │\n├──────────────────────────────────────┤\n│ Options (variable, 0-40 bytes) │\n└────────────────────────────────────┘\n\nKey Characteristics:\n• Size: 20 bytes (without options)\n• Variable header length (IHL field)\n• Header checksum required\n• Fragmentation by routers allowed\n• Options field (rarely used)\n• 32-bit addresses (4 billion addresses)"]
+    end
+
+    subgraph "IPv6 Header (Fixed 40 bytes)"
+        direction TB
+        IPv6["IPv6 Packet Header Fields:\n\n┌────────────────────────────────────┐\n│ Version(4b) │ Traffic Class(8b) │\n├──────────────────────────────────────┤\n│ Flow Label (20 bits) │\n├──────────────────────────────────────┤\n│ Payload Length (16 bits) │\n├──────────────────────────────────────┤\n│ Next Header (8b) │ Hop Limit (8b) │\n├──────────────────────────────────────┤\n│ Source IPv6 Address (128 bits) │\n├──────────────────────────────────────┤\n│ Source IPv6 Address (continued) │\n├──────────────────────────────────────┤\n│ Destination IPv6 Address (128 bits) │\n├──────────────────────────────────────┤\n│ Destination IPv6 Address (continued) │\n└────────────────────────────────────┘\n\nKey Characteristics:\n• Size: 40 bytes (fixed, no options)\n• Fixed header length (simplified)\n• No header checksum (faster processing)\n• No router fragmentation (end-to-end only)\n• Extension headers (optional)\n• 128-bit addresses (340 undecillion)"]
+    end
+
+    subgraph "Field Mappings & Differences"
+        direction TB
+        Comparison["IPv4 → IPv6 Field Evolution:\n\nEquivalent Fields:\n• Version (4 bits) → Version (4 bits)\n• DSCP/ToS (8 bits) → Traffic Class (8 bits)\n• TTL (8 bits) → Hop Limit (8 bits)\n• Protocol (8 bits) → Next Header (8 bits)\n• Source/Dest IP (32b) → Source/Dest IP (128b)\n\nRemoved in IPv6:\n✗ IHL (Header Length) - Fixed length\n✗ Identification, Flags, Fragment Offset\n✗ Header Checksum - Redundant\n✗ Options - Moved to Extension Headers\n\nNew in IPv6:\n✓ Flow Label - QoS traffic flows\n✓ Extension Headers - Modular options\n✓ Simplified processing - No checksum\n✓ Larger address space - 128-bit\n✓ Built-in IPSec support"]
+    end
+
+    subgraph "Processing Impact"
+        direction TB
+        Impact["Router Processing Efficiency:\n\nIPv4 Processing:\n• Variable header length (check IHL)\n• Calculate/verify checksum (CPU intensive)\n• Handle fragmentation at each hop\n• Parse variable options field\n\nIPv6 Processing:\n• Fixed 40-byte header (predictable)\n• No checksum verification needed\n• No fragmentation handling\n• Extension headers only at destination\n• Result: Faster forwarding decisions\n\nPerformance Benefits:\n→ Reduced router CPU load\n→ Higher throughput\n→ Simplified hardware design\n→ Better scalability"]
+    end
+
+    subgraph "Protocol Field Values (Examples)"
+        Protocols["Common Protocol/Next Header Values:\n\n• 1 = ICMP (IPv4) / ICMPv6 (IPv6)\n• 6 = TCP (Transmission Control Protocol)\n• 17 = UDP (User Datagram Protocol)\n• 41 = IPv6 encapsulation (6in4 tunnel)\n• 43 = Routing Header (IPv6 extension)\n• 44 = Fragment Header (IPv6 extension)\n• 50 = ESP (Encapsulating Security Payload)\n• 51 = AH (Authentication Header)\n• 58 = ICMPv6\n• 89 = OSPF (Open Shortest Path First)\n• 132 = SCTP (Stream Control Transmission)"]
+    end
+
+    IPv4 -.->|"Evolution to"| IPv6
+    IPv4 & IPv6 -.-> Comparison
+    Comparison -.-> Impact
+    IPv4 & IPv6 -.-> Protocols
+
+    style IPv4 fill:#e3f2fd
+    style IPv6 fill:#f1f8e9
+    style Comparison fill:#fff9c4
+    style Impact fill:#f3e5f5
+    style Protocols fill:#fff4e6
+```
+
+**IPv4 vs IPv6 Header Comparison Summary:**
+
+**Size & Structure:**
+- **IPv4:** Variable size (20-60 bytes), depends on options field and IHL (Internet Header Length)
+- **IPv6:** Fixed size (40 bytes), no variable options in main header
+
+**Key Field Differences:**
+
+1. **Address Length:**
+   - IPv4: 32-bit addresses (4.3 billion addresses)
+   - IPv6: 128-bit addresses (340 undecillion addresses)
+   - IPv6 solves address exhaustion problem
+
+2. **Header Checksum:**
+   - IPv4: Required, recalculated at each router (CPU overhead)
+   - IPv6: Removed, error checking delegated to upper/lower layers (faster)
+
+3. **Fragmentation:**
+   - IPv4: Routers can fragment packets (Identification, Flags, Fragment Offset fields)
+   - IPv6: Only source can fragment using Fragment Extension Header, routers send "Packet Too Big" ICMP
+   - Path MTU Discovery required in IPv6
+
+4. **Options Handling:**
+   - IPv4: Variable-length Options field in main header (slows processing)
+   - IPv6: Extension Headers chain (processed only at destination)
+
+5. **Quality of Service:**
+   - IPv4: ToS/DSCP field (8 bits)
+   - IPv6: Traffic Class (8 bits) + Flow Label (20 bits) for better QoS
+
+6. **Processing Efficiency:**
+   - IPv6 designed for faster router processing
+   - Fixed header length allows hardware optimization
+   - No checksum verification saves CPU cycles
+   - Extension headers only examined at final destination
+
+**IPv6 Extension Headers (Chain):**
+- Hop-by-Hop Options (processed by every router)
+- Routing Header (source routing)
+- Fragment Header (fragmentation info)
+- Destination Options (processed by destination only)
+- Authentication Header (IPSec)
+- Encapsulating Security Payload (IPSec)
+
+**Migration & Coexistence:**
+- Dual Stack: Devices run both IPv4 and IPv6 simultaneously
+- Tunneling: IPv6 packets encapsulated in IPv4 (6to4, Teredo, ISATAP)
+- Translation: NAT64/DNS64 for IPv6-only to IPv4-only communication
 
 * **Function:** Contains important information for routing and delivering IP packets.
 * **Key Fields:**
@@ -261,6 +491,126 @@ Networks in an internetwork must have a way of uniquely identifying each logical
     * The **Host Number (Host ID)**: This number uniquely identifies a host within an IP network.
 
 #### IPv4 Subnetting
+
+```mermaid
+graph TD
+    Start(["Start: Given Network\ne.g., 192.168.1.0/24"]) --> Q1{"Determine\nRequirements"}
+
+    Q1 --> Hosts["How many hosts\nper subnet needed?"]
+    Q1 --> Subnets["How many\nsubnets needed?"]
+
+    Hosts --> CalcHost["Calculate Host Bits:\n2^n - 2 ≥ hosts\n(n = host bits)"]
+    Subnets --> CalcSub["Calculate Subnet Bits:\n2^s ≥ subnets\n(s = subnet bits)"]
+
+    CalcHost & CalcSub --> Verify{"Total bits = 32?\nNetwork + Subnet\n+ Host bits"}
+
+    Verify -->|"No"| Error["Invalid: Adjust\nrequirements or\nchoose larger network"]
+    Verify -->|"Yes"| DeterminePrefix["Determine New Prefix:\nOriginal prefix + subnet bits\ne.g., /24 + 4 bits = /28"]
+
+    DeterminePrefix --> CalcMask["Calculate Subnet Mask:\n/28 = 255.255.255.240\n(11111111.11111111.11111111.11110000)"]
+
+    CalcMask --> MagicNum["Calculate Magic Number:\n256 - last octet = increment\n256 - 240 = 16"]
+
+    MagicNum --> Ranges["Determine Subnet Ranges:"]
+
+    Ranges --> Range1["Subnet 1: 192.168.1.0/28\nNetwork: 192.168.1.0\nFirst Host: 192.168.1.1\nLast Host: 192.168.1.14\nBroadcast: 192.168.1.15"]
+
+    Ranges --> Range2["Subnet 2: 192.168.1.16/28\nNetwork: 192.168.1.16\nFirst Host: 192.168.1.17\nLast Host: 192.168.1.30\nBroadcast: 192.168.1.31"]
+
+    Ranges --> Range3["Subnet 3: 192.168.1.32/28\n...\nContinues by increment of 16"]
+
+    Ranges --> Summary["Summary:\nTotal Subnets: 16 (2^4)\nHosts per Subnet: 14 (2^4 - 2)\nTotal Usable Hosts: 224"]
+    
+    subgraph "Key Formulas"
+        F1["Usable Hosts = 2^(host bits) - 2"]
+        F2["Number of Subnets = 2^(subnet bits)"]
+        F3["CIDR Notation: /prefix length"]
+        F4["Wildcard Mask = 255.255.255.255 - Subnet Mask"]
+    end
+    
+    subgraph "Common Subnet Masks"
+        SM1["/24 = 255.255.255.0 → 254 hosts"]
+        SM2["/25 = 255.255.255.128 → 126 hosts"]
+        SM3["/26 = 255.255.255.192 → 62 hosts"]
+        SM4["/27 = 255.255.255.224 → 30 hosts"]
+        SM5["/28 = 255.255.255.240 → 14 hosts"]
+        SM6["/29 = 255.255.255.248 → 6 hosts"]
+        SM7["/30 = 255.255.255.252 → 2 hosts (P2P)"]
+    end
+    
+    subgraph "VLSM Example"
+        VLSM["Variable Length Subnet Mask:\nSame network with different masks:\n192.168.1.0/26 (62 hosts) - Main Office\n192.168.1.64/27 (30 hosts) - Branch 1\n192.168.1.96/28 (14 hosts) - Branch 2\n192.168.1.112/30 (2 hosts) - P2P Link"]
+    end
+    
+    Summary --> End(["Subnetting Complete"])
+    Error --> Q1
+
+    style Start fill:#e3f2fd
+    style Q1 fill:#fff4e6
+    style CalcHost fill:#f1f8e9
+    style CalcSub fill:#f1f8e9
+    style Verify fill:#fff9c4
+    style Error fill:#ffebee
+    style DeterminePrefix fill:#e8f5e9
+    style CalcMask fill:#e8f5e9
+    style MagicNum fill:#e8f5e9
+    style Range1 fill:#e1f5ff
+    style Range2 fill:#e1f5ff
+    style Range3 fill:#e1f5ff
+    style Summary fill:#f3e5f5
+    style End fill:#e3f2fd
+    style VLSM fill:#fff9c4
+```
+
+**Subnetting Calculation Process:**
+
+1. **Determine Requirements:**
+   - How many subnets are needed? (determines subnet bits)
+   - How many hosts per subnet? (determines host bits)
+   - Formula: Network bits + Subnet bits + Host bits = 32 (for IPv4)
+
+2. **Calculate Host Bits:**
+   - Use formula: 2^n - 2 ≥ required hosts (n = host bits needed)
+   - Subtract 2 for network address and broadcast address
+   - Example: Need 50 hosts → 2^6 - 2 = 62 hosts → requires 6 host bits
+
+3. **Calculate Subnet Bits:**
+   - Use formula: 2^s ≥ required subnets (s = subnet bits needed)
+   - Example: Need 10 subnets → 2^4 = 16 subnets → requires 4 subnet bits
+
+4. **Determine New Prefix Length:**
+   - New prefix = Original prefix + Subnet bits
+   - Example: /24 network + 4 subnet bits = /28
+
+5. **Calculate Subnet Mask:**
+   - Convert CIDR notation to decimal
+   - /28 = 255.255.255.240 (binary: 28 ones followed by 4 zeros)
+
+6. **Magic Number Method:**
+   - Subtract last non-zero octet from 256
+   - This gives the subnet increment/block size
+   - Example: 256 - 240 = 16 (subnets increment by 16)
+
+7. **Identify Subnet Ranges:**
+   - Start at network address (0)
+   - Increment by magic number: 0, 16, 32, 48, 64...
+   - For each subnet:
+     * Network Address: First address in block
+     * First Host: Network + 1
+     * Last Host: Next network - 2
+     * Broadcast: Next network - 1
+
+8. **VLSM (Variable Length Subnet Mask):**
+   - Allows different subnet masks within the same network
+   - Optimizes IP address usage
+   - Larger subnets for more hosts, smaller for point-to-point links
+   - Requires classless routing protocols (OSPF, EIGRP, BGP)
+
+**Common Mistakes to Avoid:**
+- Using network address or broadcast address as host IP
+- Overlapping subnet ranges in VLSM designs
+- Forgetting to subtract 2 from total addresses for usable hosts
+- Mixing subnet masks without proper planning (non-VLSM networks)
 
 SUBNETTING is a logical subdivision of IP network. The process of dividing a network into two or more networks is called subnetting. The main purpose of subnetting is to help relieve network congestion and improve network performance & security. 
 Subnet		1		2		4		8		16		32		64		128		256
@@ -449,6 +799,69 @@ Within each subnet or broadcast domain, nodes use **MAC addresses** to forward f
 * **Remote Address Resolution:** If the destination address is on a remote network, the local host must use its **Default Gateway** to forward the packet. The host determines the MAC address of its default gateway using ARP.
 * **Router ARP Usage:** Routers also use ARP messaging for their Ethernet interfaces. ARP messaging is specific to Ethernet networks.
 * **Default Gateway IP:** The default gateway is typically set to the **first usable address** in the subnet (i.e., not the Network ID). For example, in `198.51.100.0/28`, `198.51.100.1` might be the default gateway.
+
+**ARP Request/Reply Sequence - MAC Address Discovery:**
+
+```mermaid
+sequenceDiagram
+    participant HostA as "Host A\nIP: 192.168.1.10\nMAC: AA:BB:CC:11:22:33"
+    participant Switch as "Ethernet Switch\n(Layer 2)"
+    participant HostB as "Host B\nIP: 192.168.1.20\nMAC: DD:EE:FF:44:55:66"
+    participant HostC as "Host C\nIP: 192.168.1.30\nMAC: 11:22:33:AA:BB:CC"
+
+    Note over HostA,HostC: ARP Protocol - Layer 2 Address Resolution\nSame Subnet: 192.168.1.0/24
+    
+    rect rgb(255, 245, 245)
+        Note over HostA: 1. Check ARP Cache
+        HostA->>HostA: Need to send data to 192.168.1.20\nCheck ARP cache for MAC\nCACHE MISS: No entry found
+        Note left of HostA: ARP cache empty\nMust discover MAC address\nfor 192.168.1.20
+    end
+    
+    rect rgb(255, 250, 240)
+        Note over HostA,HostC: 2. ARP Request (Broadcast)
+        HostA->>Switch: ARP REQUEST (Broadcast)\nSender IP: 192.168.1.10\nSender MAC: AA:BB:CC:11:22:33\nTarget IP: 192.168.1.20\nTarget MAC: FF:FF:FF:FF:FF:FF\n"Who has 192.168.1.20?"
+        Note left of HostA: Broadcast to all hosts\nDestination MAC:\nFF:FF:FF:FF:FF:FF\nEtherType: 0x0806 (ARP)
+
+        Switch->>HostB: Forward to all ports\n(Broadcast)
+        Switch->>HostC: Forward to all ports\n(Broadcast)
+
+        Note right of HostB: Receives ARP request\nTarget IP matches!\n192.168.1.20 is me
+        Note right of HostC: Receives ARP request\nTarget IP doesn't match\nSilently discards
+    end
+    
+    rect rgb(240, 255, 240)
+        Note over HostB: 3. Cache Sender Info
+        HostB->>HostB: Update ARP cache:\n192.168.1.10 → AA:BB:CC:11:22:33\nStore for future use
+        Note right of HostB: Cache sender's mapping\nbefore replying\n(Optimization)
+    end
+    
+    rect rgb(240, 248, 255)
+        Note over HostA,HostB: 4. ARP Reply (Unicast)
+        HostB->>Switch: ARP REPLY (Unicast)\nSender IP: 192.168.1.20\nSender MAC: DD:EE:FF:44:55:66\nTarget IP: 192.168.1.10\nTarget MAC: AA:BB:CC:11:22:33\n"192.168.1.20 is at DD:EE:FF:44:55:66"
+        Note right of HostB: Unicast reply directly\nto requesting host\nNot broadcast
+
+        Switch->>HostA: Forward to specific port\n(Unicast to AA:BB:CC:11:22:33)
+    end
+    
+    rect rgb(245, 255, 245)
+        Note over HostA: 5. Update ARP Cache
+        HostA->>HostA: Update ARP cache:\n192.168.1.20 → DD:EE:FF:44:55:66\nCache entry timeout: 120-300 sec
+        Note left of HostA: Cache updated\nFuture packets to\n192.168.1.20 use this MAC\nNo ARP needed (until timeout)
+    end
+    
+    rect rgb(250, 250, 255)
+        Note over HostA,HostB: 6. Data Transmission
+        HostA->>Switch: Ethernet Frame\nSrc MAC: AA:BB:CC:11:22:33\nDst MAC: DD:EE:FF:44:55:66\nSrc IP: 192.168.1.10\nDst IP: 192.168.1.20\nPayload: Application data
+        Switch->>HostB: Forward frame
+        Note over HostA,HostB: Communication established\nLayer 2 addressing resolved
+    end
+    
+    ARPDetails["ARP Key Concepts:\n✓ Layer 2 protocol (operates at Data Link)\n✓ Maps Layer 3 (IP) to Layer 2 (MAC) addresses\n✓ Request: Broadcast to all hosts in subnet\n✓ Reply: Unicast directly to requester\n✓ Cache: Stores mappings to avoid repeated requests\n✓ Timeout: Cache entries expire (prevent stale data)\n✓ Gratuitous ARP: Announce own IP/MAC (detect conflicts)"]
+    
+    style ARPDetails fill:#FFF9C4,stroke:#F39C12
+```
+
+*Figure: ARP protocol operation showing MAC address discovery process. Host A broadcasts ARP request asking "Who has IP 192.168.1.20?", Host B (owner of that IP) responds with unicast ARP reply containing its MAC address DD:EE:FF:44:55:66. Both hosts cache the mapping to avoid future ARP requests. Essential for Layer 2 frame forwarding within the same subnet.*
 
 #### How Default Gateways are Implemented
 
@@ -981,7 +1394,7 @@ Both IPv4 and IPv6 addresses are ultimately represented in binary, although you'
 ---
 
 
-# CHAPTER 4: TRANSPORT LAYER
+## Chapter 4: Transport Layer
 
 ### Transport Layer Overview
 * **Function:** Responsible for end-to-end communication between applications on different hosts. It segments data from the application layer and reassembles it at the destination.
@@ -1307,7 +1720,7 @@ Networks are usually "unreliable", meaning they offer no guarantees that they wi
 ---
 
 
-# CHAPTER 5: APPLICATION LAYER
+## Chapter 5: Application Layer
 
 ## Domain Name System (DNS)
 * **Function:** A hierarchical and decentralized naming system for computers, services, or any resource connected to the Internet or a private network. It translates human-readable domain names (e.g., `google.com`) into machine-readable IP addresses (e.g., `172.217.160.142`).
@@ -1417,6 +1830,70 @@ The process of translating an FQDN into an IP address is known as **Name Resolut
 * A query from a local DNS server to the Root, TLD, or Authoritative servers is an **iterative lookup**.
 
 Most Internet-accessible DNS Servers disable recursive queries for external clients. **Recursive Resolvers** are typically only accessible by authorized clients (e.g., subscribers within an ISP's network or clients on a private LAN).
+
+**DNS Resolution Process - Recursive and Iterative Queries:**
+
+```mermaid
+sequenceDiagram
+    participant Client as "Client PC\n(Stub Resolver)"
+    participant Local as "Local DNS Server\n(Recursive Resolver)\n10.0.0.1"
+    participant Root as "Root DNS Server\n(.)\n198.41.0.4"
+    participant TLD as "TLD DNS Server\n(.com)\n192.5.6.30"
+    participant Auth as "Authoritative DNS\n(example.com)\n93.184.216.34"
+    
+    Note over Client,Auth: DNS Resolution for www.example.com
+    
+    rect rgb(255, 250, 240)
+        Note over Client: 1. Check Local Cache
+        Client->>Client: Check local DNS cache\nMISS: www.example.com not found
+    end
+    
+    rect rgb(240, 248, 255)
+        Note over Client,Local: 2. Recursive Query to Local DNS
+        Client->>Local: Recursive Query\nQuery: www.example.com A?\nUDP Port 53
+        Note left of Client: "Find the IP for\nwww.example.com\nI'll wait for answer"
+        Note right of Local: Checks own cache\nMISS: Not cached\nWill query hierarchy
+    end
+    
+    rect rgb(255, 245, 245)
+        Note over Local,Root: 3. Iterative Query: Root Server
+        Local->>Root: Iterative Query\nWhere is www.example.com?
+        Root->>Local: Referral Response\n"I don't know, but ask\n.com TLD servers at:\n192.5.6.30"
+        Note right of Root: Root provides referral\nto .com TLD servers\n(Iterative: gives next step)
+    end
+    
+    rect rgb(245, 255, 245)
+        Note over Local,TLD: 4. Iterative Query: TLD Server
+        Local->>TLD: Iterative Query\nWhere is www.example.com?
+        TLD->>Local: Referral Response\n"I don't know, but ask\nexample.com nameserver:\nns1.example.com\n93.184.216.34"
+        Note right of TLD: TLD provides referral\nto authoritative NS\nfor example.com
+    end
+    
+    rect rgb(245, 245, 255)
+        Note over Local,Auth: 5. Iterative Query: Authoritative Server
+        Local->>Auth: Iterative Query\nWhat is the A record for\nwww.example.com?
+        Auth->>Local: Authoritative Answer\nwww.example.com\nA 93.184.216.34\nTTL: 3600 seconds
+        Note right of Auth: Authoritative server\nprovides definitive answer\nwith IP address
+    end
+    
+    rect rgb(255, 250, 240)
+        Note over Local: 6. Cache & Return
+        Local->>Local: Cache record for TTL\nwww.example.com → 93.184.216.34\nExpires in 3600s
+        Local->>Client: Recursive Response\nwww.example.com\nA 93.184.216.34
+        Note right of Local: Response sent back\nto client\nRecord cached locally
+    end
+    
+    rect rgb(240, 255, 240)
+        Note over Client: 7. Client Caches Result
+        Client->>Client: Cache in local DNS cache\nwww.example.com → 93.184.216.34\nCan now connect to server
+    end
+    
+    QueryTypes["Query Types:\n✓ Recursive: Client → Local DNS (full answer required)\n✓ Iterative: Local DNS → Root/TLD/Auth (referrals OK)\n✓ Authoritative: Final answer from domain's NS\n✓ Non-Authoritative: Answer from cache\n✓ Caching reduces load & latency (TTL control)"]
+    
+    style QueryTypes fill:#FFF9C4,stroke:#F39C12
+```
+
+*Figure: DNS resolution showing the complete query process. Client makes recursive query to local DNS server, which performs iterative queries to Root → TLD → Authoritative servers. Each server either provides the answer or refers to the next level in the hierarchy. Final answer is cached at multiple levels with TTL.*
 
 
 #### DNS Resource Records (RRs)
@@ -1578,7 +2055,59 @@ Router(config)# do show hosts -> To view the routers DNS cache and host table.
     3.  **Request:** The client receives one or more Offer messages and broadcasts a **DHCP Request** message to the network, formally requesting the offered IP address from a specific server (usually the first one that offered).
     4.  **Acknowledge:** The chosen DHCP server sends a **DHCP Acknowledge (ACK)** message to the client, confirming the IP address assignment and providing all the necessary configuration parameters. The client then configures its network interface with the received information. Once the client receives the ACK, it performs an ARP message to check that the Address is unused. If so, it will start to use the Address and options.
 
-(Image Placeholder - DHCP DORA Process)
+**DHCP DORA Process Sequence:**
+
+```mermaid
+sequenceDiagram
+    participant Client as "DHCP Client\n(0.0.0.0)"
+    participant Network as "Broadcast Domain\n(255.255.255.255)"
+    participant Server as "DHCP Server\n(192.168.1.1)"
+
+    Note over Client,Server: DHCP DORA Process\nDynamic IP Address Assignment
+    
+    rect rgb(255, 245, 230)
+        Note over Client,Server: 1. DISCOVER Phase
+        Client->>Network: DHCP DISCOVER (Broadcast)\nSrc: 0.0.0.0:68\nDst: 255.255.255.255:67\nMAC: Client's MAC\nRequesting IP configuration
+        Network->>Server: Forward broadcast to\nall DHCP servers
+        Note left of Client: Client has no IP yet\nBroadcasts to find servers\nUDP Port 68→67
+    end
+    
+    rect rgb(230, 245, 255)
+        Note over Client,Server: 2. OFFER Phase
+        Server->>Network: DHCP OFFER (Broadcast/Unicast)\nSrc: 192.168.1.1:67\nDst: 255.255.255.255:68\nOffered IP: 192.168.1.100\nSubnet: 255.255.255.0\nGateway: 192.168.1.1\nDNS: 8.8.8.8\nLease: 86400 sec (1 day)
+        Network->>Client: Deliver offer to client
+        Note right of Server: Server proposes:\n• IP address from pool\n• Subnet mask\n• Default gateway\n• DNS servers\n• Lease duration
+    end
+    
+    rect rgb(240, 255, 240)
+        Note over Client,Server: 3. REQUEST Phase
+        Client->>Network: DHCP REQUEST (Broadcast)\nSrc: 0.0.0.0:68\nDst: 255.255.255.255:67\nRequested IP: 192.168.1.100\nServer ID: 192.168.1.1\nAccepting offer
+        Network->>Server: Forward request
+        Note left of Client: Client accepts offer\nBroadcasts to inform all\nservers of selection\nIdentifies chosen server
+    end
+    
+    rect rgb(245, 255, 245)
+        Note over Client,Server: 4. ACKNOWLEDGE Phase
+        Server->>Network: DHCP ACK\nSrc: 192.168.1.1:67\nDst: 255.255.255.255:68\nConfirmed IP: 192.168.1.100\nLease starts now\nT1 (Renewal): 43200 sec\nT2 (Rebind): 75600 sec
+        Network->>Client: Deliver ACK
+        Note right of Server: Server confirms:\n• IP assignment final\n• Lease activated\n• Timers T1 & T2 set\n• Client can use IP
+    end
+
+    Note over Client: Client performs ARP check\nConfigures interface\nIP: 192.168.1.100/24\nGateway: 192.168.1.1\nDNS: 8.8.8.8
+    
+    rect rgb(255, 255, 240)
+        Note over Client,Server: Lease Management
+        Note over Client: T1 Timer (50% lease)\nUnicast renewal to original server
+        Note over Client: T2 Timer (87.5% lease)\nBroadcast rebind if no response
+        Note over Client: Lease expires\nRelease IP, restart DORA
+    end
+    
+    LeaseTimers["DHCP Lease Timers:\n✓ Lease Duration: Full period IP is valid\n✓ T1 (50%): Try renewing with original server\n✓ T2 (87.5%): Try rebinding with any server\n✓ Expired: Release IP, start DORA again"]
+    
+    style LeaseTimers fill:#FFF9C4,stroke:#F39C12
+```
+
+*Figure: DHCP DORA process showing the four-phase IP address acquisition: (D)iscover → (O)ffer → (R)equest → (A)cknowledge. Client starts with no IP (0.0.0.0), broadcasts to find servers, receives offers, selects one, and gets configuration confirmed. Includes lease management with T1 (renewal) and T2 (rebind) timers.*
 
 ### DHCP Server Configuration & Scopes
 
@@ -2093,7 +2622,7 @@ A firewall is a tool designed to intercept and assess incoming and outgoing pack
 
 ---
 
-# CHAPTER 6: VOICE AND VIDEO PROTOCOLS
+## Chapter 6: Voice and Video Protocols
 
 Voice over IP (VoIP) and Video Teleconferencing have become standard communication methods. Many networks are upgrading from legacy voice services to IP-based protocols and products. Voice and video communication over IP networks has become ubiquitous, replacing traditional circuit-switched telephony and enabling rich multimedia experiences. These services rely on a suite of specialized protocols to ensure real-time delivery, quality of service (QoS), and session management. This chapter explores the foundational protocols that enable voice (VoIP) and video communication across IP networks.
 Voice over IP (VoIP) Fundamentals
@@ -2663,7 +3192,7 @@ Network devices can also be categorized based on their logical placement and rol
 
 ---
 
-# CHAPTER 9: DEVICE CONFIGURATION
+## Chapter 9: Device Configuration
 
 ## InterOperating System (IOS) Boot Phase
 
@@ -3010,7 +3539,7 @@ Of the two options—to protect inbound and outbound connections—protecting in
 
 ---
 
-# CHAPTER 10: SWITCHES (LAYER 2) 
+## Chapter 10: Switches (Layer 2) 
 
 ## Network Interface
 
@@ -3182,6 +3711,120 @@ Unless configured differently, managed switches allow the configuration of **Vir
 * **Dynamic VLANs:** Nodes or hosts can also be configured to belong to dynamic VLANs using features supplied by the port, such as a host's MAC address or authentication credentials used (e.g., through 802.1X integration with a RADIUS server). This is referred to as **Dynamic VLAN Assignment**.
 
 ### Tagged and Untagged Ports
+
+```mermaid
+graph TB
+    subgraph "Layer 3 Switch / Router"
+        SVI10["SVI VLAN 10\n192.168.10.1/24\n(Default Gateway)"]
+        SVI20["SVI VLAN 20\n192.168.20.1/24\n(Default Gateway)"]
+        SVI30["SVI VLAN 30\n192.168.30.1/24\n(Default Gateway)"]
+
+        Router["Inter-VLAN Routing\nLayer 3 Forwarding"]
+        
+        SVI10 & SVI20 & SVI30 -.-> Router
+    end
+
+    subgraph "Switch A"
+        TrunkA["Trunk Port Gi0/1\nTagged: VLAN 10,20,30\nNative: VLAN 99"]
+        
+        subgraph "Access Ports (Untagged)"
+            PortA1["Fa0/1\nAccess VLAN 10\nUntagged"]
+            PortA2["Fa0/2\nAccess VLAN 20\nUntagged"]
+            PortA3["Fa0/3\nAccess VLAN 30\nUntagged"]
+        end
+    end
+
+    subgraph "Switch B"
+        TrunkB["Trunk Port Gi0/1\nTagged: VLAN 10,20,30\nNative: VLAN 99"]
+        
+        subgraph "Access Ports (Untagged)"
+            PortB1["Fa0/1\nAccess VLAN 10\nUntagged"]
+            PortB2["Fa0/2\nAccess VLAN 20\nUntagged"]
+            PortB3["Fa0/3\nAccess VLAN 30\nUntagged"]
+        end
+    end
+
+    subgraph "End Devices - VLAN 10 (Sales)"
+        PC1["PC-A\n192.168.10.10\nGW: 192.168.10.1"]
+        PC2["PC-B\n192.168.10.20\nGW: 192.168.10.1"]
+    end
+
+    subgraph "End Devices - VLAN 20 (Engineering)"
+        PC3["PC-C\n192.168.20.10\nGW: 192.168.20.1"]
+        PC4["PC-D\n192.168.20.20\nGW: 192.168.20.1"]
+    end
+
+    subgraph "End Devices - VLAN 30 (Management)"
+        PC5["PC-E\n192.168.30.10\nGW: 192.168.30.1"]
+        PC6["PC-F\n192.168.30.20\nGW: 192.168.30.1"]
+    end
+
+    subgraph "802.1Q Frame Tagging"
+        Frame["Ethernet Frame with 802.1Q Tag:\n┌─────────┬──────┬──────┬─────┬────────┬─────┐\n│Dest MAC│Src MAC│ TPID │ TCI │Payload │ FCS │\n└─────────┴──────┴──────┴─────┴────────┴─────┘\nTPID: 0x8100 (identifies 802.1Q)\nTCI: Priority(3b) + DEI(1b) + VLAN ID(12b)"]
+    end
+
+    Router -.->|"Routes between VLANs"| TrunkA & TrunkB
+    TrunkA <-->|"Tagged frames\nVLAN 10,20,30"| TrunkB
+    
+    PortA1 --> PC1
+    PortB1 --> PC2
+    PortA2 --> PC3
+    PortB2 --> PC4
+    PortA3 --> PC5
+    PortB3 --> PC6
+
+    style SVI10 fill:#e3f2fd
+    style SVI20 fill:#f1f8e9
+    style SVI30 fill:#fff9c4
+    style Router fill:#ffebee
+    style TrunkA fill:#fff4e6
+    style TrunkB fill:#fff4e6
+    style PortA1 fill:#e1f5ff
+    style PortA2 fill:#e8f5e9
+    style PortA3 fill:#fff9c4
+    style PortB1 fill:#e1f5ff
+    style PortB2 fill:#e8f5e9
+    style PortB3 fill:#fff9c4
+    style PC1 fill:#e1f5ff
+    style PC2 fill:#e1f5ff
+    style PC3 fill:#e8f5e9
+    style PC4 fill:#e8f5e9
+    style PC5 fill:#fff9c4
+    style PC6 fill:#fff9c4
+    style Frame fill:#f3e5f5
+```
+
+**VLAN Architecture Components:**
+
+1. **Access Ports (Untagged):**
+   - Connect end devices (PCs, printers, phones)
+   - Belong to a single VLAN
+   - Strip VLAN tags before forwarding to devices
+   - Switch adds VLAN tag when receiving frames from access ports
+
+2. **Trunk Ports (Tagged):**
+   - Carry traffic for multiple VLANs between switches
+   - Use IEEE 802.1Q tagging to identify VLAN membership
+   - 4-byte tag inserted: TPID (0x8100) + TCI (Priority + DEI + VLAN ID)
+   - Native VLAN: untagged traffic defaults to this VLAN (security best practice: change from VLAN 1)
+
+3. **Inter-VLAN Routing:**
+   - Layer 3 device required for communication between VLANs
+   - Switch Virtual Interfaces (SVIs): virtual Layer 3 interfaces per VLAN
+   - Each SVI acts as default gateway for its VLAN
+   - Enables internal routing without external router (Layer 3 switch)
+
+4. **802.1Q Frame Structure:**
+   - TPID (Tag Protocol Identifier): 16 bits, value 0x8100
+   - PCP (Priority Code Point): 3 bits for QoS (0-7 priority levels)
+   - DEI (Drop Eligible Indicator): 1 bit, marks frames eligible for dropping during congestion
+   - VLAN ID: 12 bits, identifies VLAN (1-4094, 0 and 4095 reserved)
+
+5. **VLAN Segmentation Benefits:**
+   - Reduced broadcast domains
+   - Enhanced security through logical separation
+   - Simplified network management and scalability
+   - QoS implementation per VLAN (e.g., Voice VLAN priority)
 
 * **Untagged / Access / Host Port:** If a switch port will only ever participate in a single VLAN, it is configured as an **untagged** or **access port**. This is typically where end-user devices (PCs, printers) connect.
     * If a frame is addressed to a port in the same VLAN on the same switch, no tag needs to be added to the frame.
@@ -4141,7 +4784,7 @@ This setup uses IP address directly assigned to the port-channel, facilitating e
 The EtherChannel aggregation protocol (PAgP/LACP) must be uniform across all devices in the EtherChannel. If explicitly set, each switch port in the bundle must support the selected protocol.
 
 
-# CHAPTER 11: ROUTERS (LAYER 3) 
+## Chapter 11: Routers (Layer 3) 
 
 ## Router Basics
 
@@ -4983,7 +5626,7 @@ VRF is used commonly by service providers to allow one device to carry traffic f
 ---
 
 
-## ACCESS CONTROL LISTS
+## Access Control Lists
 
 IPv4 access control lists (ACL) give network engineers the ability to program a filter into a router. Each router, on each interface, for both the inbound and outbound direction, can enable a different ACL with different rules. Each ACL’s rules tell the router which packets to discard and which to allow through. IPv4 ACLs perform many functions in Cisco routers, with the most common use as a packet filter. Engineers can enable ACLs on a router so that the ACL sits in the forwarding path of packets as they pass through the router. After it is enabled, the router considers whether each IP packet will either be discarded or allowed to continue as if the ACL did not exist. ACLs can be used for many other IOS features as well. As an example, ACLs can be used to match packets for applying Quality of Service (QoS) features. QoS allows a router to give some packets better service, and other packets worse service.
 
@@ -5127,7 +5770,7 @@ In Summary:
 * Extended ACLs are placed closer to the source (often inbound) for more efficient filtering.
 
 
-# CHAPTER 12: MANAGEMENT PLANE/LAYER PROTOCOLS
+## Chapter 12: Management Plane/Layer Protocols
 
 ## CISCO DISCOVERY PROTOCOL (CDP)
 
@@ -5430,7 +6073,7 @@ For good design, the enterprise NTP configuration ought to refer to at least two
 
 ---
 
-## FTP AND TFTP
+## FTP and TFTP
 
 File Transfer Protocol (FTP) and Trivial File Transfer Protocol (TFTP). Both exist as TCP/IP protocols defined in RFCs. Both use a client and server model, in which the client connects to a server and then the client can copy files to the server or from the server.
 
@@ -5496,6 +6139,70 @@ The word "Trivial" in the name refers to its relatively small number of features
 ---
 
 ## Network Address Translation (NAT)
+
+```mermaid
+graph LR
+    subgraph "Inside Network (Private)"
+        H1["Host A\n192.168.1.10\n(Inside Local)"]
+        H2["Host B\n192.168.1.20\n(Inside Local)"]
+        H3["Host C\n192.168.1.30\n(Inside Local)"]
+    end
+
+    subgraph "NAT Router"
+        direction TB
+        NATFunc["NAT Translation\nProcess"]
+        
+        subgraph "Translation Types"
+            StaticNAT["Static NAT\nPermanent 1:1 Mapping"]
+            DynamicNAT["Dynamic NAT\nPool-based 1:1 Mapping"]
+            PAT["PAT/Overload\nMany:1 + Port Mapping"]
+        end
+        
+        subgraph "NAT Table Example"
+            Table["Inside Local → Inside Global\n192.168.1.10 ↔ 200.1.1.1 (Static)\n192.168.1.20:5001 ↔ 200.1.1.2:5001 (PAT)\n192.168.1.30:5002 ↔ 200.1.1.2:5002 (PAT)"]
+        end
+    end
+
+    subgraph "Outside Network (Internet)"
+        Server["Internet Server\n8.8.8.8\n(Outside Global)"]
+    end
+
+    subgraph "Public IP Pool"
+        Pool["200.1.1.1 - 200.1.1.5\n(Inside Global Addresses)"]
+    end
+
+    H1 & H2 & H3 -->|"Private IPs"| NATFunc
+    NATFunc -->|"Public IPs"| Server
+    Pool -.->|"Allocated from pool"| NATFunc
+
+    Server -->|"Return Traffic\nUses translated address"| NATFunc
+    NATFunc -->|"De-translated\nto private IP"| H1 & H2 & H3
+
+    style H1 fill:#e1f5ff
+    style H2 fill:#e1f5ff
+    style H3 fill:#e1f5ff
+    style NATFunc fill:#fff4e6
+    style Server fill:#f3e5f5
+    style Pool fill:#e8f5e9
+    style Table fill:#fff9c4
+    style StaticNAT fill:#ffebee
+    style DynamicNAT fill:#e3f2fd
+    style PAT fill:#f1f8e9
+```
+
+**NAT Translation Process Flow:**
+
+1. **Inside Local → Inside Global Translation:**
+   - Inside hosts use private IP addresses (192.168.1.x)
+   - NAT router translates source IP to public IP from pool (200.1.1.x)
+   - Three translation methods: Static (permanent), Dynamic (pool-based), PAT (port-multiplexing)
+
+2. **Static NAT:** One private IP permanently maps to one public IP (e.g., web servers)
+3. **Dynamic NAT:** Private IPs dynamically allocated public IPs from pool on first-come basis
+4. **PAT (Port Address Translation):** Multiple private IPs share one public IP using unique port numbers
+
+5. **NAT Table:** Router maintains translation table mapping inside local addresses to inside global addresses
+6. **Return Traffic:** Server responds to public IP; NAT router de-translates to private IP and forwards to internal host
 
 NAT, as defined in RFC 3022, allows a host that does not have a valid, registered, globally unique IP address to communicate with other hosts through the Internet. The hosts might be using private addresses or addresses assigned to another organization. In either case, NAT allows these addresses that are not Internet-ready to continue to be used and still allows communication with hosts across the Internet.
 
@@ -5642,7 +6349,7 @@ IPv4 doesn't provide enough addresses for all devices that need an IP address in
 | `clear ip nat translation protocol inside global-ip global-port local-ip local-port [outside local-ip global-ip]` | Clears some of the dynamic entries in the NAT table, depending on which parameters are used.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
 
-# CHAPTER 13: CONTROL PLANE/LAYER PROTOCOLS
+## Chapter 13: Control Plane/Layer Protocols
 
 ## Quality of Service (QoS)
 
@@ -5883,9 +6590,9 @@ The journey to deliver a seamless experience for real-time applications like voi
 * **Applications:** CAC is typically associated with voice and video systems (e.g., Cisco Unified Communications Manager, IP PBXs) that integrate with network QoS policies.
 
 
-# CHAPTER 14: NETWORK DEVICE SECURITY
+## Chapter 14: Network Device Security
 
-## PORT SECURITY
+## Port Security
 
 Port security allows you to control which source MAC address(es) are allowed to enter a switchport. If an unauthorized source MAC address enters a port, an action will be taken. The default action is ERR-Disabled.
 
@@ -5960,7 +6667,7 @@ MAC addresses dynamically learned or statically configured on a port-security en
 * `switchport port-security mac-address sticky`: When enabled on an interface, dynamically learned secure MAC addresses will be added to the running configuration like this: `switchport port-security mac-address sticky 0009.000b.000c`. These are considered both dynamic and static.
 * The 'Sticky' secure MAC addresses will never age out; you will need to save the running-config to the startup-config (`copy run start`) to make them truly permanent (else they will not be kept if the switch reboots).
 
-## DHCP SNOOPING
+## DHCP Snooping
 
 DHCP Snooping is a security feature of switches used to filter DHCP messages received on **Untrusted** ports. DHCP Snooping only filters DHCP messages; non-DHCP messages are not affected. All ports are untrusted by default.
 
@@ -6098,7 +6805,7 @@ If ARP messages are received faster than the specified rate, the switchport inte
 * To recover from the `ERR-Disabled` state manually: `shutdown` and then `no shutdown`.
 
 
-# CHAPTER 15: ARCHITECTURE, DESIGN, TOPOLOGY
+## Chapter 15: Architecture, Design, Topology
 
 ## Network Architecture
 
@@ -6217,7 +6924,7 @@ MPLS allows WAN providers to offer various robust solutions for enterprise netwo
 * **Ethernet LAN Service (full-mesh):** Acts like a LAN; all devices can send frames to all other devices. All devices have to be in the same subnet and become OSPF neighbors.
 * **Ethernet Tree Service (Hub-n-Spoke):** A central site can communicate to a defined set of remote sites, but the remote sites cannot communicate directly with each other. This is also referred to as "partial mesh, point-multipoint, hub-and-spoke."
 
-## NETWORK TYPES AND CHARACTERISTICS
+## Network Types and Characteristics
 
 A network comprises **nodes** and **links**.
 * **Intermediate system nodes** perform a forwarding function (e.g., routers, switches).
@@ -6262,7 +6969,7 @@ A network type refers primarily to its **scope** and **size**.
 
 ---
 
-## NETWORK TOPOLOGY
+## Network Topology
 
 A **network topology** describes the physical or logical structure of the network in terms of **nodes** and **links**.
 
@@ -6379,7 +7086,7 @@ In summary, choosing the right network type and topology, combined with appropri
 
 ---
 
-# CHAPTER 16: TROUBLESHOOTING & INFORMATION GATHERING TOOLS
+## Chapter 16: Troubleshooting & Information Gathering Tools
 
 This chapter details various network troubleshooting and information-gathering tools, focusing on their functionality and typical use cases.
 
@@ -6552,7 +7259,7 @@ A **Protocol Analyzer** works in conjunction with a **packet capture** or **snif
 **Use Cases:** Network monitoring, security analysis, billing, traffic engineering, and capacity planning.
 ---
 
-# CHAPTER 17: NETWORK TROUBLESHOOTING METHODOLOGY
+## Chapter 17: Network Troubleshooting Methodology
 
 Effective network troubleshooting requires a systematic approach to problem-solving and clear communication with users/clients. The following best practice model provides a proven process:
 
@@ -7018,7 +7725,7 @@ Licensing for servers and network appliances can be complex, and it's easy to ma
 
 ---
 
-# CHAPTER 18: WIRELESS STANDARD & WIRELESS SECURITY
+## Chapter 18: Wireless Standard & Wireless Security
 
 ## Wireless LANs (WLANs) based on IEEE 802.11 Standard (Wi-Fi)
 
@@ -7270,7 +7977,7 @@ A **site survey** is a critical planning tool to ensure the WLAN delivers accept
 
 ---
 
-## WIRELESS NETWORK SECURITY
+## Wireless Network Security
 
 Wireless networks, while offering mobility and convenience, pose considerable security risks if not properly secured with access controls. All clients must be authenticated before they can associate with an Access Point (AP). In corporate settings, a separate SSID (Service Set Identifier) with restricted access can be provided for guest Internet access, keeping them off the main corporate network.
 
@@ -7662,7 +8369,7 @@ Let's break down network types, characteristics, topology, and how they relate t
 
 ---
 
-# CHAPTER 19: SOFTWARE DEFINED NETWORKING
+## Chapter 19: Software Defined Networking
 
 ## SOFTWARE-DEFINED WIDE AREA NETWORKING (SD-WAN)
 
@@ -7690,7 +8397,7 @@ The SD-WAN is managed by a **Controller and management software**, which can be 
 
 ---
 
-## DATA CENTER NETWORK DESIGN
+## Data Center Network Design
 
 A data center is a site dedicated to provisioning server resources. It hosts network services (authentication, addressing, name resolution), application servers, and storage area networks (SANs). While many are purpose-built facilities, some concepts apply to on-premises server rooms.
 
@@ -7773,9 +8480,9 @@ SDN architectures are typically divided into three logical layers, from top to b
 
 ---
 
-# CHAPTER 20: INFRASTRUCTURE AS CODE (IAC): AUTOMATION & ORCHESTRATION 
+## Chapter 20: Infrastructure As Code (IaC): Automation & Orchestration 
 
-## NETWORK AUTOMATION
+## Network Automation
 
 Network automation provides many key benefits by using tools and methods to automate tasks.
 
@@ -7795,7 +8502,7 @@ Network automation provides many key benefits by using tools and methods to auto
 
 ---
 
-## CISCO SD-ACCESS
+## Cisco Sd-Access
 
 Cisco SD-Access is Cisco's enterprise-level SDN solution for campus and branch networks.
 
