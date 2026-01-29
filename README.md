@@ -14,26 +14,35 @@
 
 ### Systems & Architecture
 
-- Azure & AWS: [system-architecture/system-administration/Azure_AWS.md](system-architecture/system-administration/Azure_AWS.md)
-- Azure VPN Gateway Configuration: [system-architecture/system-administration/Azure_VPN_Gateway_Configuration.md](system-architecture/system-administration/Azure_VPN_Gateway_Configuration.md)
-- Azure ExpressRoute Deep Dive: [system-architecture/system-administration/Azure_ExpressRoute_Deep_Dive.md](system-architecture/system-administration/Azure_ExpressRoute_Deep_Dive.md)
-- Azure Load Balancing Services: [system-architecture/system-administration/Azure_Load_Balancing_Services.md](system-architecture/system-administration/Azure_Load_Balancing_Services.md)
-- Azure Private DNS Configuration: [system-architecture/system-administration/Azure_Private_DNS_Configuration.md](system-architecture/system-administration/Azure_Private_DNS_Configuration.md)
-- AWS EC2 Web Server Setup: [system-architecture/system-administration/AWS_EC2_Web_Server_Setup.md](system-architecture/system-administration/AWS_EC2_Web_Server_Setup.md)
-- Cloud Engineering: [system-architecture/system-administration/CloudEngineering.md](system-architecture/system-administration/CloudEngineering.md)
-- Reverse engineering & system architecture: [system-architecture/reverse-engineering/Reverse_Engineering_System_Architecture.md](system-architecture/reverse-engineering/Reverse_Engineering_System_Architecture.md)
+- Azure VPN Gateway Configuration: [system-architecture/system-administration/AzureVPNGatewayConfiguration.md](system-architecture/system-administration/AzureVPNGatewayConfiguration.md)
+- Azure ExpressRoute Deep Dive: [system-architecture/system-administration/AzureExpressRouteDeepDive.md](system-architecture/system-administration/AzureExpressRouteDeepDive.md)
+- Azure Load Balancing Services: [system-architecture/system-administration/AzureLoadBalancingServices.md](system-architecture/system-administration/AzureLoadBalancingServices.md)
+- Azure Private DNS Configuration: [system-architecture/system-administration/AzurePrivateDNSConfiguration.md](system-architecture/system-administration/AzurePrivateDNSConfiguration.md)
+- AWS EC2 Web Server Setup: [system-architecture/system-administration/AwsEC2WebServerSetup.md](system-architecture/system-administration/AwsEC2WebServerSetup.md)
+- Cloud Networking Concepts: [system-architecture/system-administration/CloudNetworkingConcepts.md](system-architecture/system-administration/CloudNetworkingConcepts.md)
+- Reverse engineering & system architecture: [system-architecture/reverse-engineering/ReverseEngineeringSystemArchitecture.md](system-architecture/reverse-engineering/ReverseEngineeringSystemArchitecture.md)
 
 ### Security
 
-- Ethical hacking: [security/ethical-hacking/EthicalHacking.md](security/ethical-hacking/EthicalHacking.md)
-- Active Directory pentest: [security/ethical-hacking/ActiveDirectoryPentest.md](security/ethical-hacking/ActiveDirectoryPentest.md)
-- Cybersecurity: [security/ethical-hacking/CyberSecurity.md](security/ethical-hacking/CyberSecurity.md)
-- OWASP Top 10: [security/web-security/Owasp_Top10.md](security/web-security/Owasp_Top10.md)
+- Security foundations & frameworks: [security/foundations/SecurityFoundationsFrameworks.md](security/foundations/SecurityFoundationsFrameworks.md)
+- Defensive implementation & operations: [security/defensive-security/DefenseImplementationandOperations.md](security/defensive-security/DefenseImplementationandOperations.md)
+- Offensive penetration testing techniques: [security/offensive-security/PenetrationTestingAttackTechniques.md](security/offensive-security/PenetrationTestingAttackTechniques.md)
+- Threat intelligence assessment playbook: [security/offensive-security/ThreatIntelligenceAssessment.md](security/offensive-security/ThreatIntelligenceAssessment.md)
+- Ethical hacking overview: [security/ethical-hacking/EthicalHacking.md](security/ethical-hacking/EthicalHacking.md)
+- Active Directory pentest lab: [security/ethical-hacking/ActiveDirectoryPentest.md](security/ethical-hacking/ActiveDirectoryPentest.md)
+- Cybersecurity field notes: [security/ethical-hacking/CyberSecurity.md](security/ethical-hacking/CyberSecurity.md)
+- OWASP Top 10 web risks: [security/web-security/OwaspTop10.md](security/web-security/OwaspTop10.md)
 
 ### Networking (CCNA/CCNP)
 
-- Networking protocols: [networking-ccna-ccnp/NetworkingProtcols.md](networking-ccna-ccnp/NetworkingProtcols.md)
-- Packet Tracer / EVE-NG / GNS3: [networking-ccna-ccnp/PacketTracer_EveNG_GNS3.md](networking-ccna-ccnp/PacketTracer_EveNG_GNS3.md)
+- Fundamentals & protocol layers: [networking-ccna-ccnp/fundamentals/Fundamentals_and_Protocol_Layers.md](networking-ccna-ccnp/fundamentals/Fundamentals_and_Protocol_Layers.md)
+- IP addressing & subnetting: [networking-ccna-ccnp/fundamentals/IP_Addressing_and_Subnetting.md](networking-ccna-ccnp/fundamentals/IP_Addressing_and_Subnetting.md)
+- Application layer protocols: [networking-ccna-ccnp/fundamentals/Application_Layer_Protocols.md](networking-ccna-ccnp/fundamentals/Application_Layer_Protocols.md)
+- Networking protocols field guide: [networking-ccna-ccnp/NetworkingProtcols.md](networking-ccna-ccnp/NetworkingProtcols.md)
+- Physical infrastructure design: [networking-ccna-ccnp/infrastructure/Physical_Infrastructure.md](networking-ccna-ccnp/infrastructure/Physical_Infrastructure.md)
+- Network devices & operations: [networking-ccna-ccnp/operations/Network_Devices_and_Operations.md](networking-ccna-ccnp/operations/Network_Devices_and_Operations.md)
+- Packet Tracer / EVE-NG / GNS3 labs: [networking-ccna-ccnp/PacketTracerEveNGGNS3.md](networking-ccna-ccnp/PacketTracerEveNGGNS3.md)
+- Advanced topics reference: [networking-ccna-ccnp/advanced/Advanced_Topics.md](networking-ccna-ccnp/advanced/Advanced_Topics.md)
 
 ## Contribution
 
