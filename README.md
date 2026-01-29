@@ -15,6 +15,12 @@
 ### Systems & Architecture
 
 - Azure & AWS: [system-architecture/system-administration/Azure_AWS.md](system-architecture/system-administration/Azure_AWS.md)
+- Azure VPN Gateway Configuration: [system-architecture/system-administration/Azure_VPN_Gateway_Configuration.md](system-architecture/system-administration/Azure_VPN_Gateway_Configuration.md)
+- Azure ExpressRoute Deep Dive: [system-architecture/system-administration/Azure_ExpressRoute_Deep_Dive.md](system-architecture/system-administration/Azure_ExpressRoute_Deep_Dive.md)
+- Azure Load Balancing Services: [system-architecture/system-administration/Azure_Load_Balancing_Services.md](system-architecture/system-administration/Azure_Load_Balancing_Services.md)
+- Azure Private DNS Configuration: [system-architecture/system-administration/Azure_Private_DNS_Configuration.md](system-architecture/system-administration/Azure_Private_DNS_Configuration.md)
+- AWS EC2 Web Server Setup: [system-architecture/system-administration/AWS_EC2_Web_Server_Setup.md](system-architecture/system-administration/AWS_EC2_Web_Server_Setup.md)
+- Cloud Engineering: [system-architecture/system-administration/CloudEngineering.md](system-architecture/system-administration/CloudEngineering.md)
 - Reverse engineering & system architecture: [system-architecture/reverse-engineering/Reverse_Engineering_System_Architecture.md](system-architecture/reverse-engineering/Reverse_Engineering_System_Architecture.md)
 
 ### Security
