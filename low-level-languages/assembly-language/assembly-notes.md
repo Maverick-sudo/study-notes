@@ -67,12 +67,19 @@ The **Instruction Cycle** consists of 6 phases:
 
 ```mermaid
 flowchart TD
-    Fetch[1. FETCH] --> Decode[2. DECODE]
-    Decode --> EvalAddr[3. EVALUATE ADDRESS]
-    EvalAddr --> FetchOp[4. FETCH OPERANDS]
-    FetchOp --> Execute[5. EXECUTE]
-    Execute --> Store[6. STORE RESULT]
-    Store --> |PC incremented| Fetch
+    Fetch["1. FETCH<br/>MAR ← PC<br/>MDR ← M[MAR]<br/>IR ← MDR<br/>PC ← PC + 1"] --> Decode["2. DECODE<br/>Determine opcode<br/>from IR[15:12]"]
+    Decode --> EvalAddr["3. EVALUATE ADDRESS<br/>Calculate operand<br/>address if needed"]
+    EvalAddr --> FetchOp["4. FETCH OPERANDS<br/>Retrieve operands<br/>from registers/memory"]
+    FetchOp --> Execute["5. EXECUTE<br/>Perform operation<br/>Set condition codes"]
+    Execute --> Store["6. STORE RESULT<br/>Write result to<br/>register or memory"]
+    Store --> |"Start next cycle"| Fetch
+    
+    style Fetch fill:#e1f5ff
+    style Decode fill:#fff4e1
+    style EvalAddr fill:#ffe1e1
+    style FetchOp fill:#e1ffe1
+    style Execute fill:#e1f5ff
+    style Store fill:#fff4e1
 ```
 
 <!-- Diagram reconstructed from OCR text showing instruction cycle -->
@@ -83,6 +90,8 @@ flowchart TD
 4. **FETCH OPERANDS** - Retrieve operands from register/memory
 5. **EXECUTE** - Perform operation (ADD, AND, NOT, JMP, etc.)
 6. **STORE RESULT** - Write result to register or memory
+
+> **Important:** The PC is incremented during the **FETCH** phase, not during EXECUTE. This means when an instruction executes, the PC already points to the next instruction. This is why branch offsets are relative to PC+1, and why JSR saves PC (which already points past the JSR instruction) to R7.
 
 **Note:** The PC is incremented in the fetch phase of each instruction, not during execute.
 
@@ -215,6 +224,28 @@ ADD R0, R0, #1    ; Add 1 to get 2's complement
 - **N (Negative):** Set if result < 0
 - **Z (Zero):** Set if result == 0
 - **P (Positive):** Set if result > 0
+
+```mermaid
+flowchart TD
+    Inst["Instruction executes<br/>Result produced"] --> Check{"Check result value"}
+    Check -->|"< 0"| SetN["Set N=1, Z=0, P=0"]
+    Check -->|"= 0"| SetZ["Set N=0, Z=1, P=0"]
+    Check -->|"> 0"| SetP["Set N=0, Z=0, P=1"]
+    
+    Example1["ADD R1, R2, R3<br/>Result: -5"] --> SetN
+    Example2["AND R1, R1, #0<br/>Result: 0"] --> SetZ
+    Example3["ADD R1, R2, #5<br/>Result: 10"] --> SetP
+    
+    SetN --> Branch["BR instruction<br/>checks flags"]
+    SetZ --> Branch
+    SetP --> Branch
+    
+    style SetN fill:#ffe1e1
+    style SetZ fill:#fff4e1
+    style SetP fill:#e1ffe1
+```
+
+> **Important:** Almost all LC-3 instructions (except LEA, BR, JMP, JSR/JSRR, ST, STI, STR, TRAP) set the condition codes based on the result. This allows subsequent BR instructions to make decisions. Understanding when condition codes are set is crucial for correct branching logic.
 
 **Examples:**
 ```asm
@@ -362,6 +393,36 @@ LC-3 supports three main addressing modes:
 | - PC-relative | Address = PC + offset | `LD R1, LABEL` |
 | - Indirect | Address at (PC + offset) | `LDI R1, LABEL` |
 | - Base+Offset | Address = BaseR + offset | `LDR R1, R2, #10` |
+
+```mermaid
+flowchart TD
+    subgraph "PC-Relative Addressing"
+        PC1["PC = 0x3010"] --> Calc1["Address = PC + SEXT(offset9)<br/>offset9 = 5<br/>Address = 0x3010 + 5 = 0x3015"]
+        Calc1 --> Mem1["Load from M[0x3015]"]
+    end
+    
+    subgraph "Indirect Addressing"
+        PC2["PC = 0x3010"] --> Calc2["Pointer = PC + SEXT(offset9)<br/>offset9 = 5<br/>Pointer = 0x3015"]
+        Calc2 --> Mem2["Address = M[0x3015] = 0x4020"]
+        Mem2 --> Final2["Load from M[0x4020]"]
+    end
+    
+    subgraph "Base+Offset Addressing"
+        Base["BaseR = 0x4000"] --> Calc3["Address = BaseR + SEXT(offset6)<br/>offset6 = 10<br/>Address = 0x4000 + 10 = 0x400A"]
+        Calc3 --> Mem3["Load from M[0x400A]"]
+    end
+    
+    style Calc1 fill:#e1f5ff
+    style Calc2 fill:#fff4e1
+    style Calc3 fill:#ffe1e1
+    style Mem2 fill:#fff4e1
+```
+
+> **Important - When to use which addressing mode:**
+> - **PC-relative:** Accessing global variables/constants near the code (within ±256 words)
+> - **Indirect:** Accessing data through pointers, or data far from code
+> - **Base+Offset:** Array/structure access, pointer dereferencing with offset
+> - **Immediate:** Small constants (-16 to +15 for imm5)
 
 ---
 
@@ -575,6 +636,44 @@ INT = Ready_bit [15] AND Interrupt_Enable [14]
 
 If both bits are set, the device asserts its interrupt request signal.
 
+```mermaid
+sequenceDiagram
+    participant Program as User Program
+    participant CPU as Processor
+    participant Device as I/O Device
+    participant ISR as Interrupt Handler
+    
+    Program->>CPU: Executing instruction N
+    Device->>Device: Ready bit set (data available)
+    Device->>Device: Interrupt Enable bit set
+    Device->>CPU: Assert INT signal
+    
+    CPU->>CPU: Complete current instruction
+    CPU->>CPU: Check INT signal
+    CPU->>CPU: Save PC and PSR to Supervisor Stack
+    CPU->>CPU: Load INTV (8-bit vector)
+    CPU->>CPU: PC ← M[ZEXT(INTV)]
+    
+    CPU->>ISR: Jump to interrupt service routine
+    ISR->>ISR: Save registers (R0-R7)
+    ISR->>Device: Read data from device
+    ISR->>Device: Clear ready bit
+    ISR->>ISR: Process data
+    ISR->>ISR: Restore registers
+    ISR->>CPU: Execute RTI
+    
+    CPU->>CPU: Restore PC and PSR from stack
+    CPU->>Program: Resume at instruction N+1
+    Program->>CPU: Continue execution
+```
+
+> **Important - Interrupt vs Polling Trade-offs:**
+> - **Polling advantages:** Simple to implement, predictable timing, no context switch overhead
+> - **Polling disadvantages:** Wastes CPU cycles checking status, cannot do other work while waiting
+> - **Interrupt advantages:** CPU free to do other work, immediate response when device ready, efficient for infrequent events
+> - **Interrupt disadvantages:** Complex to implement, overhead of context switch (save/restore state), priority management needed
+> - **When to use:** Polling for fast devices or when response time is critical; interrupts for slow devices or when multitasking
+
 ---
 
 ### Interrupt Vector Table
@@ -711,7 +810,57 @@ MSG     .STRINGZ "Hello, World!\n"
 ### General-Purpose Registers (64-bit)
 
 | 64-bit | 32-bit | 16-bit | 8-bit (high/low) | Purpose |
-|--------|--------|--------|------------------|---------|
+|--------|--------|--------|------------------|------|
+| RAX | EAX | AX | AH/AL | Accumulator (return values) |
+| RBX | EBX | BX | BH/BL | Base register |
+| RCX | ECX | CX | CH/CL | Counter (loop operations) |
+| RDX | EDX | DX | DH/DL | Data (I/O operations) |
+| RSI | ESI | SI | SIL | Source index (string ops) |
+
+```mermaid
+flowchart TD
+    subgraph "RAX Register Aliasing (64 bits total)"
+        RAX["RAX (64-bit)<br/>0x0000000012345678<br/>All 64 bits"]
+        
+        EAX["EAX (32-bit)<br/>0x12345678<br/>Lower 32 bits<br/>WRITING TO EAX ZEROS UPPER 32 BITS"]
+        
+        AX["AX (16-bit)<br/>0x5678<br/>Lower 16 bits"]
+        
+        AH["AH (8-bit)<br/>0x56<br/>Bits [15:8]"]
+        AL["AL (8-bit)<br/>0x78<br/>Bits [7:0]"]
+    end
+    
+    subgraph "Example: Register Modification Effects"
+        Orig["mov rax, 0x123456789ABCDEF0"]
+        Step1["mov eax, 0x11111111<br/>Result: RAX = 0x0000000011111111<br/>(upper 32 bits zeroed!)"]
+        Step2["mov ax, 0x2222<br/>Result: RAX = 0x0000000011112222<br/>(only lower 16 bits changed)"]
+        Step3["mov al, 0x33<br/>Result: RAX = 0x0000000011112233<br/>(only lower 8 bits changed)"]
+        Step4["mov ah, 0x44<br/>Result: RAX = 0x0000000011114433<br/>(bits [15:8] changed)"]
+    end
+    
+    RAX -.-> EAX
+    EAX -.-> AX
+    AX -.-> AH
+    AX -.-> AL
+    
+    Orig --> Step1
+    Step1 --> Step2
+    Step2 --> Step3
+    Step3 --> Step4
+    
+    style EAX fill:#ffe1e1
+    style Step1 fill:#ffe1e1
+    style AX fill:#fff4e1
+    style AL fill:#e1f5ff
+    style AH fill:#e1ffe1
+```
+
+> **Important - Register Aliasing Pitfall:**
+> Writing to a 32-bit register (EAX, EBX, etc.) **zeros the upper 32 bits** of the corresponding 64-bit register. This is different from 16-bit and 8-bit operations, which only modify their respective bits without affecting other parts of the register. This behavior is a deliberate design choice in x86-64 to avoid false dependencies in out-of-order execution.
+
+<!-- Table reconstructed from OCR text -->
+
+---
 | RAX | EAX | AX | AH/AL | Accumulator (return values) |
 | RBX | EBX | BX | BH/BL | Base register |
 | RCX | ECX | CX | CH/CL | Counter (loop operations) |
@@ -765,6 +914,48 @@ MSG     .STRINGZ "Hello, World!\n"
 
 <!-- OCR correction: "Syntane" → "syntax" -->
 
+```mermaid
+flowchart TD
+    subgraph "AT&T Syntax (GAS, GCC default)"
+        ATT1["Source, Destination order<br/>mov %rax, %rbx<br/>Copies RAX → RBX"]
+        ATT2["Registers prefixed with %<br/>Immediates prefixed with $<br/>mov $42, %rax"]
+        ATT3["Memory: displacement(base, index, scale)<br/>mov 8(%rbp), %rax<br/>lea -16(%rbp, %rcx, 4), %rax"]
+        ATT4["Size suffixes on instructions<br/>movb, movw, movl, movq"]
+    end
+    
+    subgraph "Intel Syntax (NASM, MASM, most docs)"
+        Intel1["Destination, Source order<br/>mov rbx, rax<br/>Copies RAX → RBX"]
+        Intel2["No register/immediate prefix<br/>mov rax, 42"]
+        Intel3["Memory: [base + index*scale + displacement]<br/>mov rax, [rbp+8]<br/>lea rax, [rbp + rcx*4 - 16]"]
+        Intel4["Size in operand or ptr directive<br/>mov byte ptr [rax], 5<br/>mov qword ptr [rbx], rax"]
+    end
+    
+    subgraph "Side-by-Side Examples"
+        Ex1["Integer immediate:<br/>AT&T: mov $5, %rax<br/>Intel: mov rax, 5"]
+        Ex2["Register to register:<br/>AT&T: add %rbx, %rax<br/>Intel: add rax, rbx"]
+        Ex3["Memory to register:<br/>AT&T: movq 16(%rsp), %rax<br/>Intel: mov rax, [rsp+16]"]
+        Ex4["Complex addressing:<br/>AT&T: leaq 8(%rbp,%rcx,4), %rax<br/>Intel: lea rax, [rbp+rcx*4+8]"]
+    end
+    
+    ATT1 -.->|"Same operation"| Intel1
+    ATT2 -.->|"Same operation"| Intel2
+    ATT3 -.->|"Same operation"| Intel3
+    ATT4 -.->|"Same operation"| Intel4
+    
+    style ATT1 fill:#ffe1e1
+    style ATT2 fill:#ffe1e1
+    style ATT3 fill:#ffe1e1
+    style ATT4 fill:#ffe1e1
+    style Intel1 fill:#e1f5ff
+    style Intel2 fill:#e1f5ff
+    style Intel3 fill:#e1f5ff
+    style Intel4 fill:#e1f5ff
+    style Ex1 fill:#fff4e1
+    style Ex2 fill:#fff4e1
+    style Ex3 fill:#fff4e1
+    style Ex4 fill:#fff4e1
+```
+
 **Intel Syntax:**
 ```asm
 mov  rax, 2         ; destination, source
@@ -781,6 +972,13 @@ add  $3, %rax       ; immediate, destination
 - Intel: `destination, source`
 - AT&T: `source, destination`
 - AT&T uses `%` prefix for registers and `$` for immediates
+
+> **Important - Syntax Choice:**
+> - **AT&T syntax:** Default for GCC/GAS on Linux/Unix, used in inline assembly in C code
+> - **Intel syntax:** Used in Windows development (MASM), most documentation/tutorials, matches Intel manuals
+> - **In GAS, enable Intel syntax with:** `.intel_syntax noprefix` directive
+> - **Biggest pitfall:** Operand order reversal (AT&T `add %rbx, %rax` means `rax += rbx`, Intel `add rax, rbx` means same)
+> - **Mixing syntaxes causes confusion** – pick one and stay consistent within a project
 
 ---
 
@@ -977,6 +1175,69 @@ section .data
 ```
 
 <!-- Stack frame diagram reconstructed from OCR text -->
+
+```mermaid
+flowchart TD
+    subgraph "Function Call with 7+ Arguments (System V AMD64 ABI)"
+        Caller["Caller prepares arguments"]
+        
+        Arg1to6["Arguments 1-6<br/>RDI, RSI, RDX, RCX, R8, R9"]
+        Arg7Plus["Arguments 7+ pushed on stack<br/>(right to left order)"]
+        
+        CallInst["call function<br/>Pushes return address<br/>Jumps to function entry"]
+        
+        Prologue["Function prologue:<br/>push rbp<br/>mov rbp, rsp<br/>sub rsp, N (local space)"]
+        
+        Body["Function body executes<br/>Access args via registers/[rbp+offset]<br/>Access locals via [rbp-offset]"]
+        
+        Epilogue["Function epilogue:<br/>mov rsp, rbp<br/>pop rbp<br/>ret"]
+        
+        Return["Return to caller<br/>Pop return address into RIP<br/>RAX contains return value"]
+    end
+    
+    subgraph "Stack Memory Layout During Execution"
+        direction TB
+        High["Higher Addresses"]
+        ArgStack["[rbp+24] Arg 9<br/>[rbp+16] Arg 8<br/>[rbp+8] Arg 7"]
+        RetAddr["[rbp] Return Address (8 bytes)<br/>Pushed by CALL instruction"]
+        SavedRBP["[rbp-8] Saved RBP<br/>Pushed in prologue"]
+        Locals["[rbp-16] Local var 1<br/>[rbp-24] Local var 2<br/>[rbp-32] Local var 3"]
+        Low["Lower Addresses (RSP here)"]
+        
+        High --> ArgStack
+        ArgStack --> RetAddr
+        RetAddr --> SavedRBP
+        SavedRBP --> Locals
+        Locals --> Low
+    end
+    
+    Caller --> Arg1to6
+    Caller --> Arg7Plus
+    Arg1to6 --> CallInst
+    Arg7Plus --> CallInst
+    CallInst --> Prologue
+    Prologue --> Body
+    Body --> Epilogue
+    Epilogue --> Return
+    
+    style Arg1to6 fill:#e1f5ff
+    style Arg7Plus fill:#ffe1e1
+    style ArgStack fill:#ffe1e1
+    style Prologue fill:#fff4e1
+    style Epilogue fill:#fff4e1
+    style SavedRBP fill:#e1ffe1
+    style Locals fill:#e1f5ff
+```
+
+> **Important - x86-64 Calling Convention (System V ABI):**
+> - **Arguments 1-6:** Passed in RDI, RSI, RDX, RCX, R8, R9 (integer/pointer)
+> - **Arguments 7+:** Pushed on stack in **reverse order** (rightmost first)
+> - **Return value:** RAX (integer/pointer), XMM0 (floating-point)
+> - **Caller-saved:** RAX, RCX, RDX, RSI, RDI, R8-R11 (caller must save before call if needed after)
+> - **Callee-saved:** RBX, RBP, R12-R15 (callee must preserve and restore)
+> - **Stack alignment:** Must be 16-byte aligned **before** CALL (CALL pushes 8-byte return address)
+> - **Red zone:** 128 bytes below RSP reserved for leaf functions (no calls)
+> - **Violating calling conventions causes crashes** – always follow ABI when interfacing with C/C++
 
 ---
 
