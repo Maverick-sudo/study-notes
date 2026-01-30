@@ -119,6 +119,8 @@ Modern computers usually perform 64-bit floating point operations at almost the 
 
 <!-- OCR correction: "prof()" → "printf()", "Scamming" → "Scanning" -->
 
+Input and output in C are handled through library functions rather than built-in language constructs, with `printf()` and `scanf()` serving as the primary text-based I/O mechanisms for console applications. Unlike higher-level languages where printing might be a simple built-in statement, C's approach treats I/O as formatted conversion between internal binary representations and external character streams. The `printf()` function performs output by interpreting a format string containing format specifiers (beginning with `%`) that indicate how to convert subsequent arguments from their internal binary representation into character sequences for display. Similarly, `scanf()` performs input by parsing character sequences according to format specifiers and converting them into binary values to store at specified memory addresses. This approach provides precise control over formatting—field widths, precision, padding, number bases—but requires careful coordination between format strings and argument lists. Mismatches between format specifiers and actual argument types produce undefined behavior, a common source of bugs and security vulnerabilities.
+
 ### printf()
 
 `printf()` is actually a general-purpose format conversion function. Its first formal argument is a string of characters to be printed, with each `%` sign indicating where one of the other (second, third, ...) arguments is to be substituted, and what form it is to be printed in.
@@ -170,6 +172,8 @@ The formatting pattern supplied to `printf()` and its argument after the format 
 ## Control Structures
 
 <!-- OCR correction: "stretnes" → "structures", "futement" → "statement" -->
+
+Control structures determine the order in which statements execute, enabling programs to make decisions (selection), repeat operations (iteration), and organize code into callable units (subroutines). C provides the standard repertoire of control structures common to imperative programming languages: conditional execution via `if-else` and `switch`, looping via `while`, `for`, and `do-while`, and non-local control transfers via `break`, `continue`, `goto`, and `return`. Understanding control structures requires understanding that program execution follows the program counter through a sequence of instructions, and control structures manipulate the program counter to deviate from simple sequential execution.
 
 Programs are composed of control structures:
 
@@ -320,6 +324,10 @@ Called "unsigned" because they do not have a 'sign bit' (used in signed integers
 ## Arrays
 
 <!-- OCR correction: "amay" → "array", "Indonded" → "indexed" -->
+
+Arrays in C are fundamentally different from arrays in higher-level languages, representing a contiguous block of memory holding elements of identical type, with direct correspondence between array indexing notation and pointer arithmetic. An array declaration `int a[10]` allocates 40 consecutive bytes (assuming 4-byte integers) and establishes `a` as a constant pointer to the first element. The critical insight is that array access `a[i]` is syntactic sugar: the compiler immediately translates it to `*(a + i)`, computing the address of the i-th element by adding `i * sizeof(element_type)` to the base address. This reveals why array indices start at 0—the first element is at offset 0 from the base address. Arrays enable efficient sequential access patterns and are the foundation for strings (arrays of characters), but they introduce significant hazards absent in bounds-checked languages.
+
+C provides no runtime bounds checking for array access. When you write `a[i]`, the compiler generates code that blindly computes an address and accesses that memory location, regardless of whether `i` falls within the valid range `[0, size-1]`. Accessing beyond array bounds produces undefined behavior—the program may appear to work, may crash immediately, may corrupt unrelated data, or may create security vulnerabilities. This lack of protection is deliberate: bounds checking would impose runtime overhead incompatible with C's performance goals, and system programmers need the ability to perform calculated out-of-bounds access for certain low-level operations. The programmer bears full responsibility for correctness. Buffer overflow exploits, among the most prevalent security vulnerabilities in C programs, arise directly from this design choice. Understanding arrays requires understanding that they are not "safe collections" but rather raw memory blocks with convenient indexing syntax, and that this rawness demands corresponding discipline from the programmer.
 
 An array is a collection of similar data items that are stored sequentially in memory. All elements in the array are of the same type and are accessible through a single name (identifier).
 
@@ -611,6 +619,8 @@ If a program is in several source files, a variable defined in file 1 and used i
 
 <!-- OCR correction: "formichon" → "function", "Arquemont" → "argument" -->
 
+Functions in C provide the mechanism for decomposing programs into manageable, reusable units of computation that can be developed, tested, and reasoned about independently. A function encapsulates a sequence of statements behind an interface consisting of a name, a parameter list specifying the types and order of input values, and a return type specifying the type of output value. C's function calling mechanism implements pass-by-value semantics: when you call a function, the values of arguments are copied into the function's parameter variables, which exist as local variables within the function's stack frame. This means modifications to parameters within the function do not affect the caller's variables—the function operates on private copies. This isolation simplifies reasoning about function behavior but limits the ability of functions to modify caller data, a limitation addressed through pointer parameters (passing addresses rather than values, enabling indirect modification). Understanding functions requires understanding their implementation in terms of the runtime stack: each function call allocates a new stack frame containing parameters, local variables, and bookkeeping information, and this frame is deallocated when the function returns.
+
 Functions provide a convenient way to encapsulate some form of computation in a "black box" which can be used without worrying about the internals.
 
 ### Function Form
@@ -717,6 +727,8 @@ A **character set** is nothing but a collection of characters, where each symbol
 
 <!-- OCR correction: "conmomted" → "converted" -->
 
+Type conversions in C occur both implicitly (automatic conversions inserted by the compiler according to language rules) and explicitly (conversions requested by the programmer via cast syntax). Implicit conversions follow a hierarchy of type promotion designed to preserve value and precision where possible: smaller integer types promote to larger integer types, integers promote to floating-point types when mixed with floating-point operands, and signed/unsigned conversions follow specific rules to maintain bit patterns. The most critical conversion rule to internalize is that integer division truncates—when both operands of division are integers, the result is an integer with any fractional part discarded, regardless of the destination variable's type. This behavior surprises programmers accustomed to languages with unified numeric types and is a frequent source of calculation errors. Understanding when conversions occur (in mixed-type arithmetic expressions, in assignments where left and right sides differ in type, and in function argument passing) and what information may be lost (narrowing conversions from larger to smaller types, float-to-int truncation, signed-to-unsigned reinterpretation) is essential for writing correct numerical code and avoiding subtle bugs where calculations produce unexpected results.
+
 1. When operands of different types appear in expressions, they are converted to a common type according to rules.
 
 2. `char` and `int` can be freely mixed in arithmetic expressions; every `char` is automatically converted to an `int`.
@@ -794,6 +806,8 @@ flowchart TD
 ---
 
 ## Operators
+
+C provides a rich set of operators that perform arithmetic, logical, relational, bitwise, and assignment operations on values, with defined precedence and associativity rules determining evaluation order in expressions. Operators are categorized by the number of operands (unary, binary, ternary), by the types they operate on (arithmetic operators require numeric operands, logical operators interpret operands as boolean, bitwise operators treat operands as bit patterns), and by their evaluation semantics (arithmetic operators perform mathematical calculations, assignment operators store values and have side effects, increment/decrement operators modify their operands).
 
 ### Arithmetic Operators
 
@@ -1072,11 +1086,17 @@ Strings are arrays of characters, so they are passed by reference too. `char` is
 
 In PHP, Python, JavaScript, and Java, strings are passed by value in their default implementation.
 
+The preceding discussion of function arguments explained C's pass-by-value semantics, where functions receive copies of arguments and cannot directly modify caller variables. This limitation is both a simplification (preventing unintended side effects) and a constraint (preventing intended modifications). Pointers resolve this tension by enabling pass-by-reference semantics within a pass-by-value framework: by passing the address of a variable rather than its value, we give the function the ability to indirectly modify the original variable through pointer dereferencing.
+
 ---
 
 ## Pointers
 
 <!-- OCR correction: "pomber" → "pointer", "addrous" → "address" -->
+
+Pointers represent one of the most powerful and conceptually challenging features in C, providing direct manipulation of memory addresses. A pointer is a variable whose value is the memory address of another variable or object. Understanding pointers requires grasping a fundamental distinction: memory is organized as a linear sequence of addressable locations, and each variable occupies one or more of these locations. When you declare `int *px`, you are declaring that `px` will hold the address of an integer, not the integer itself. This typed addressing is critical—pointers are constrained to point to specific types, which determines how the compiler interprets dereferencing operations and scales pointer arithmetic. Pointers enable three essential programming capabilities that would otherwise be impossible or inefficient in C: implementing dynamic data structures (linked lists, trees, graphs) where relationships between elements are established at runtime rather than compile-time; implementing pass-by-reference semantics to allow functions to modify caller variables despite C's pass-by-value calling convention; and providing an alternative notation for array access that reveals the underlying relationship between arrays and memory addresses. Without pointers, C would lose its character as a systems programming language capable of implementing operating systems, device drivers, and other software that must directly manage hardware resources.
+
+The distinction between a pointer's address (`&px`), the pointer's value (the address it stores, accessed as `px`), and the value at the pointed-to location (accessed as `*px`) is the source of most pointer-related confusion and bugs. Mastering this triple distinction is prerequisite to understanding pointer arithmetic, function pointers, and multi-level indirection.
 
 A **pointer** is a variable that contains the address of another variable or memory object.
 
@@ -1420,6 +1440,8 @@ This recursive algorithm:
 - Recursively explores all four directions
 - Backtracks if no path found
 
+The preceding sections have examined C programs from the programmer's perspective: source code expressing algorithms using variables, functions, control structures, and data structures. Understanding how these high-level constructs become executable machine code requires examining the compilation process, which translates human-readable source through multiple stages into binary instructions that the processor can execute.
+
 ---
 
 ## Compilation Process
@@ -1468,6 +1490,10 @@ flowchart TD
 ---
 
 ## Memory Management
+
+Memory management encompasses the strategies and mechanisms by which a program allocates, uses, and deallocates the memory resources required for execution. In C, understanding memory management requires understanding the fundamental distinction between stack-allocated and heap-allocated memory, each serving different use cases with different lifetimes and different allocation strategies. The stack operates automatically with function calls: when a function begins execution, space for its local variables is allocated on the stack by adjusting the stack pointer; when the function returns, that space is reclaimed by restoring the stack pointer to its previous position. This automatic lifetime management is fast and predictable but inflexible—stack-allocated variables have lifetimes strictly tied to their enclosing function's execution, and stack space is limited (typically 1-8 MB). The heap, by contrast, provides dynamic memory allocation via `malloc()`, `calloc()`, `realloc()`, and `free()`, allowing programs to request arbitrary amounts of memory at runtime that persists until explicitly deallocated. This flexibility enables data structures whose size is unknown at compile time and objects that must outlive their creating function, but requires manual lifetime management and introduces the possibility of memory leaks (failing to free allocated memory) and dangling pointers (accessing memory after it has been freed).
+
+The memory layout of a C program reflects this distinction: the text segment contains read-only program code; the data segment contains global and static variables with fixed addresses; the heap grows from low addresses toward high addresses as allocations occur; and the stack grows from high addresses toward low addresses as functions are called. Understanding this layout is essential for reasoning about pointer validity, recognizing stack overflow conditions, and comprehending why certain programming patterns are unsafe. Modern systems also implement memory protection mechanisms (ASLR, DEP/NX, stack canaries) that exploit this structure to defend against exploitation, but these mechanisms cannot eliminate the fundamental risks introduced by manual memory management—they can only make exploitation more difficult. Mastery of memory management in C means understanding not just the API (`malloc`/`free`) but the underlying memory model and the consequences of deviating from correct usage patterns.
 
 ### Stack vs Heap
 

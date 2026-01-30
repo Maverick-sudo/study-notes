@@ -45,6 +45,10 @@ Assembly language is one step friendlier to make the programming process more fr
 
 <!-- OCR correction: "Regulers" → "registers", "pomber" → "pointer" -->
 
+The LC-3 (Little Computer 3) is a simplified Instruction Set Architecture designed for educational purposes, providing a complete, functional ISA with sufficient complexity to illustrate fundamental computer organization principles while remaining simple enough for students to comprehend entirely. An ISA defines the abstract interface between software and hardware: the set of instructions the processor can execute, the storage locations (registers and memory) available to programs, the instruction formats specifying how operations and operands are encoded, and the execution semantics defining what each instruction does. The LC-3 makes specific design choices that balance pedagogical clarity against practical simplicity: a 16-bit word size (smaller than modern 64-bit systems but sufficient for education); 8 general-purpose registers (enough to write non-trivial programs without overwhelming students with register management); a reduced but complete instruction set including arithmetic, logical, data movement, and control flow operations; and a straightforward memory model with uniform addressing. These choices make LC-3 a RISC-style architecture: instructions are uniform length, operations typically involve only registers (with separate load/store instructions for memory access), and instruction encoding is regular and orthogonal.
+
+Understanding the LC-3 ISA means understanding not just the individual instructions but the architectural model: how the program counter determines which instruction executes next; how condition codes enable conditional branching based on previous computation results; how the instruction cycle (fetch, decode, evaluate address, fetch operands, execute, store result) sequences through phases to execute each instruction; and how different addressing modes (immediate, register, PC-relative, indirect, base+offset) provide different ways to specify operand locations. The LC-3's simplicity makes it an ideal vehicle for learning assembly language programming and for understanding the low-level implementation of high-level constructs: loops become conditional branches, function calls become save-return-address-and-jump sequences, arrays become base+offset memory accesses, and pointers become addresses stored in registers. Mastering LC-3 provides a foundation for understanding more complex ISAs like x86-64, where the principles remain the same but the details multiply enormously.
+
 ### Registers
 
 **Registers** are small memory storage areas built into the CPU processor.
@@ -383,6 +387,8 @@ LEA R2, DATA      ; R2 ← address of DATA
 
 <!-- OCR correction: "addresing" → "addressing" -->
 
+Addressing modes specify how an instruction determines the location (address) of its operands, representing one of the most important ISA design choices because they directly impact code density, execution speed, and programming flexibility. Different addressing modes trade off between instruction encoding complexity, execution speed, and expressive power: immediate addressing (operand is part of instruction) is fast but limits the operand to a small constant; register addressing (operand is in a register) is fast and flexible but requires the value to already be in a register; and various memory addressing modes (PC-relative, indirect, base+offset) provide different mechanisms for computing addresses of memory operands. Understanding addressing modes is essential for reading assembly code because the same opcode with different addressing modes performs conceptually similar operations on operands located differently, and for writing efficient assembly code because choosing the appropriate addressing mode affects both code size and execution speed.
+
 LC-3 supports three main addressing modes:
 
 | Mode | Description | Example |
@@ -620,6 +626,10 @@ DDR     .FILL xFE06
 
 <!-- OCR correction: "Intoment" → "interrupt" -->
 
+Interrupts represent a fundamental architectural mechanism that enables asynchronous event handling by allowing external devices or internal conditions to temporarily suspend normal program execution, force the processor to execute a handler routine for the event, and then resume the interrupted program as if nothing had happened. The need for interrupts arises from the fundamental mismatch between processor speed and I/O device speed: a processor executing billions of instructions per second cannot afford to repeatedly test (poll) whether a device that operates at human timescales (keyboard, disk, network) is ready without wasting enormous amounts of computation. Interrupts invert the control relationship: instead of the processor asking the device "are you ready?" in a tight loop, the device signals the processor "I have data" when an event occurs. This enables efficient I/O by allowing the processor to perform useful work while waiting for slow devices, with the interrupt mechanism guaranteeing immediate response when the device requires attention.
+
+The interrupt mechanism introduces complexity absent in purely sequential execution: the interrupted program's complete state (program counter, processor status register, working registers) must be preserved when the interrupt handler begins execution and restored when it completes, ensuring that the interruption is transparent to the interrupted code. This context switch has overhead (saving and restoring state takes time), but for infrequent events or slow devices, the overhead is negligible compared to the waste of polling. The trade-off between polling and interrupts depends on event frequency and processing requirements: for extremely frequent events or when the event processing time is shorter than the context switch overhead, polling may be more efficient; for infrequent events or when the processor has other work to perform, interrupts are superior. Understanding interrupts requires understanding the concept of priority levels: when multiple interrupt sources exist, the system must determine which interrupts can preempt which handlers, typically through a priority scheme where higher-priority interrupts can interrupt lower-priority handlers but not vice versa. This priority mechanism prevents low-priority events from delaying time-critical responses but introduces the possibility of priority inversion problems if not carefully managed.
+
 ### Interrupt Mechanism
 
 **Polling** requires the processor to spend time testing the ready bit repeatedly until it is set. With **interrupt-driven I/O**, the I/O device can force the running program to stop and have the processor execute a program that services the I/O device, then have the stopped program resume execution as if nothing happened.
@@ -730,6 +740,8 @@ flowchart TD
 
 <!-- OCR correction: "LIFO" → "LIFO" (Last In First Out preserved) -->
 
+The stack is a Last-In-First-Out (LIFO) data structure implemented in a designated region of memory using a stack pointer register (R6 in LC-3, RSP in x86-64) that tracks the current top of the stack. Stack operations enable two essential capabilities: temporary storage of register values when a program needs to use registers for a new purpose but must preserve their current contents (particularly important across subroutine calls), and implementation of the subroutine calling mechanism where return addresses, parameters, and local variables are managed through push and pop operations. The stack grows toward lower addresses by convention in most architectures: pushing a value decrements the stack pointer then writes the value; popping a value reads the value then increments the stack pointer. This grow-downward convention is arbitrary but must be consistently followed within an architecture to ensure correct operation.
+
 ### Stack Pointer
 
 - **R6** is typically used as the stack pointer
@@ -756,6 +768,8 @@ ADD  R6, R6, #1      ; Increment stack pointer
 ## Subroutines and the Call/Return Mechanism
 
 <!-- OCR correction: "SubRoutme" → "subroutine" -->
+
+Subroutines (also called functions, procedures, or methods in higher-level languages) provide the fundamental mechanism for code reuse and program organization by allowing a sequence of instructions to be written once and invoked from multiple locations, with execution automatically returning to the instruction following the call. Implementing subroutines requires solving the return address problem: when a subroutine finishes execution, how does the processor know where to resume execution in the calling code? Different architectures adopt different solutions: LC-3 stores the return address in register R7 when JSR/JSRR executes, making subroutine calls fast (no memory access) but requiring the subroutine to save R7 if it makes nested calls; x86-64 pushes the return address onto the stack when call executes, making nested calls automatic but requiring stack manipulation overhead. Understanding the subroutine mechanism requires understanding both the call/return instruction pair and the conventions (caller-save vs callee-save registers, parameter passing, return value communication) that enable subroutines to interact correctly with calling code.
 
 **JSR/JSRR** - Implements the call mechanism:
 1. Saves return address in R7: `R7 ← PC`
@@ -806,6 +820,25 @@ MSG     .STRINGZ "Hello, World!\n"
 ## x86-64 Assembly
 
 <!-- OCR correction: "Intel AMD64" → "Intel/AMD x86-64" -->
+
+The x86-64 architecture (also known as AMD64 or Intel 64) represents the 64-bit extension of the x86 ISA that has dominated personal computing and server markets since its introduction in 2003, combining backward compatibility with decades of x86 evolution while providing the expanded address space and register set required for modern computing workloads. Unlike LC-3's pedagogical simplicity, x86-64 is a production ISA shaped by decades of incremental enhancement, market pressure, and the constraint of maintaining backward compatibility with 16-bit 8086 code from 1978. This heritage produces an architecture of considerably greater complexity: variable-length instructions ranging from 1 to 15 bytes (compared to LC-3's uniform 16-bit instructions), a rich set of addressing modes including complex memory operand specifications, multiple instruction prefixes modifying instruction behavior, and a massive instruction set reflecting decades of feature accumulation. Where LC-3 exemplifies RISC philosophy (simple, uniform, orthogonal), x86-64 exemplifies CISC philosophy (complex, feature-rich, irregular), with memory operands directly usable in arithmetic instructions and specialized instructions for specific operations.
+
+**LC-3 vs x86-64 Architectural Comparison:**
+
+| Feature | LC-3 | x86-64 |
+|---------|------|--------|
+| **Word Size** | 16 bits | 64 bits (with 32/16/8-bit subsets) |
+| **General-Purpose Registers** | 8 registers (R0-R7) | 16 registers (RAX, RBX, RCX, RDX, RSI, RDI, RBP, RSP, R8-R15) |
+| **Instruction Length** | Fixed 16 bits | Variable 1-15 bytes |
+| **Addressing Modes** | PC-relative, indirect, base+offset, immediate, register | Direct, indirect, base+index*scale+displacement, RIP-relative, immediate, register |
+| **Instruction Set Philosophy** | RISC-style: simple, uniform | CISC-style: complex, feature-rich |
+| **Memory Access** | Separate load/store instructions | Memory operands allowed in arithmetic instructions |
+| **Condition Codes** | 3 bits (N, Z, P) set by most instructions | Multiple flags (CF, ZF, SF, OF, PF, etc.) in RFLAGS register |
+| **Stack Pointer** | R6 (convention, not enforced) | RSP (architecturally defined) |
+| **Function Call Mechanism** | JSR/RET (saves PC to R7) | call/ret (uses stack for return addresses) |
+| **Privilege Levels** | 2 levels (supervisor/user via PSR[15]) | 4 rings (Ring 0-3, typically only 0 and 3 used) |
+
+Despite these differences, the fundamental concepts remain constant: programs are sequences of instructions executed by the processor; instructions operate on registers and memory; control flow is managed through conditional/unconditional branches; subroutines are called by saving return addresses and jumping; and I/O occurs through memory-mapped registers or specialized instructions. Transitioning from LC-3 to x86-64 means applying familiar concepts within a vastly more complex architectural context, where the principles you've learned remain valid but the details require careful attention to the x86-64's specific encoding rules, register conventions, and calling conventions.
 
 ### General-Purpose Registers (64-bit)
 
